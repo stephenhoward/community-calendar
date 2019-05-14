@@ -85,9 +85,9 @@ paths:
   /events:
     get:
       parameters:
-        - $ref: '#/components/categoryParam'
-        - $ref: '#/components/startParam'
-        - $ref: '#/components/endParam'
+        - $ref: '#/components/parameters/categoryParam'
+        - $ref: '#/components/parameters/startParam'
+        - $ref: '#/components/parameters/endParam'
       responses:
 
   /events/{event}:
