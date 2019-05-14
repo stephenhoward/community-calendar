@@ -1,0 +1,107 @@
+openapi: 3.0.0
+info: 
+  title: Community Events API
+  description: event management api
+  version: 1.0.0
+  contact:
+    name: Author
+    email: stephen@enterity.com
+components:
+  parameters:
+    startParam:
+      name: start
+      in: query
+      schema:
+        type: string
+        format: date
+    endParam:
+      name: end
+      in: query
+      schema:
+        type: string
+        format: date
+    categoryParam:
+      name: category
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+  responses:
+    NotFound:
+      description: Not Found
+  schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        parent:
+          schema:
+            $ref: '#/components/schemas/Category'
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+    Image:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        data:
+          type: string
+          format: byte
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: '/#components/schemas/Image'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+
+paths:
+  /events:
+    get:
+      parameters:
+        - $ref: '#/components/categoryParam'
+        - $ref: '#/components/startParam'
+        - $ref: '#/components/endParam'
+      responses:
+
+  /events/{event}:
+    parameters:
+      - in: path
+        name: event
+        required: true
+        type: string
+        format: uuid
+  /categories:
+    get:
+      parameters:
+      responses:
+    post:
+      parameters:
+      responses:
+  /categories/{category}:
