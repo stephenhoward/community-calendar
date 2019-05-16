@@ -29,7 +29,10 @@ components:
       schema:
         type: array
         items:
-          type: string
+          oneOf:
+            - type: string # category id
+              format: uuid
+            - type: string # category name
   responses:
     NotFound:
       description: Not Found
@@ -46,11 +49,17 @@ components:
         description:
           type: string
         parent:
-            $ref: '#/components/schemas/Category'
+            oneOf:
+              - type: string
+                format: uuid
+              - $ref: '#/components/schemas/Category'
         children:
             type: array
             items:
-              $ref: '#/components/schemas/Category'
+              oneOf:
+                - type: string
+                  format: uuid
+                - $ref: '#/components/schemas/Category'
     Image:
       properties:
         title:
@@ -76,11 +85,17 @@ components:
         categories:
           type: array
           items:
-            $ref: '#/components/schemas/Category'
+            oneOf:
+              - type: string
+                format: uuid
+              - $ref: '#/components/schemas/Category'
         events:
           type: array
           items:
-            $ref: '#/components/schemas/Event'
+            oneOf:
+              - type: string
+                format: uuid
+              - $ref: '#/components/schemas/Event'
 
 paths:
   /events:
@@ -89,6 +104,22 @@ paths:
         - $ref: '#/components/parameters/categoryParam'
         - $ref: '#/components/parameters/startParam'
         - $ref: '#/components/parameters/endParam'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
       responses:
         '200':
           $ref: '#/components/responses/Ok'
@@ -101,6 +132,27 @@ paths:
         schema:
           type: string
           format: uuid
+    get:
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      operationId: app.events.update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
   /categories:
     get:
       parameters:
@@ -131,6 +183,17 @@ paths:
           type: string
           format: uuid
     get:
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+    post:
+      operationId: app.categories.update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
       responses:
         '200':
           $ref: '#/components/responses/Ok'

@@ -8,8 +8,12 @@ WORKDIR ${HOME}
 
 RUN pip install -r requirements.txt
 
-CMD ["python3","bin/app.py"]
+EXPOSE 5000
+
+ENV FLASK_ENV development
+ENV FLASK_APP app
+CMD ["flask", "run", "--host=0.0.0.0"]
 
 # USAGE (for now):
 # docker build -t events:dev .
-# docker run -it --rm -v ~/events/:/opt/calendar events:dev sh
+# docker run -it --rm -v ~/events/:/opt/calendar -p 5000:5000/tcp events:dev
