@@ -4,16 +4,28 @@ categories = Blueprint('categories',__name__)
 
 def search():
     return jsonify([
-        { 'name': 'Test',
-          'id':   '12345'
+        {
+            'id':   '12345',
+            'info': [
+                {
+                    'language': 'en',
+                    'name': 'Test'
+                }
+            ]
         }
     ])
 
 
 def get(category):
     return jsonify(
-        { 'name': 'Test',
-          'id':   '12345'
+        {
+            'id':   '12345',
+            'info': [
+                {
+                    'language': 'en',
+                    'name': 'Test'
+                }
+            ]
         }
     )
 

@@ -4,15 +4,27 @@ events = Blueprint('events',__name__)
 
 def search():
     return jsonify([
-        { 'title': 'Test',
-          'id':    '12345'
+        {
+            'id':   '12345',
+            'info': [
+                {
+                    'language': 'en',
+                    'title': 'Test'
+                }
+            ]        
         }
     ])
 
 def get(event):
     return jsonify(
-        { 'title': 'Test',
-          'id':    '12345'
+        {
+            'id':   '12345',
+            'info': [
+                {
+                    'language': 'en',
+                    'title': 'Test'
+                }
+            ]
         }
     )
 
