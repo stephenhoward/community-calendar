@@ -276,6 +276,30 @@ components:
         id:
           type: string
           format: uuid
+        status:
+          type: string
+          enum:
+            - Draft
+            - Active
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        dates_only:
+          type: boolean
+        repeat:
+          type: string
+          enum:
+            - Daily
+            - Weekly
+            - Monthly
+        repeat_by:
+          type: string
+          enum:
+            - DayOfMonth
+            - WeekdayOfMonth
         info:
           type: array
           items:
