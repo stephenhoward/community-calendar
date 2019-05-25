@@ -2,7 +2,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Table, String, Text, Enum, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from calendar.model import Model, Translation
+from event_calendar.model import Model, Translation
 
 Base = declarative_base()
 

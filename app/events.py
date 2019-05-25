@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from model.event import Event
+from event_calendar.model.event import Event
 
 events = Blueprint('events',__name__)
 

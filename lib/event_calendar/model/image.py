@@ -1,6 +1,6 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from calendar.model import Model, Translation
+from event_calendar.model import Model, Translation
 from sqlalchemy import Column, Text, LargeBinary
 
 Base = declarative_base()
