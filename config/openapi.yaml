@@ -311,6 +311,13 @@ components:
                 type: string
               description:
                 type: string
+              accessibility_information:
+                type: string
+        location:
+            oneOf:
+              - type: string
+                format: uuid
+              - $ref: '#/components/schemas/Location'
         images:
           type: array
           items:

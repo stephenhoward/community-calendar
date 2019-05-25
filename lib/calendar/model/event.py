@@ -1,5 +1,11 @@
-from sqlalchemy import Column, Table, Text, Enum, Boolean, DateTime, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Table, String, Text, Enum, Boolean, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
+import enum
+from calendar.model import Model, Translation
+
+Base = declarative_base()
 
 event_categories_table = Table('event_categories', Base.metadata,
     Column('event_id',    UUID, ForeignKey('events.id')),
@@ -19,10 +25,9 @@ class EventRepeatBy(enum.Enum):
     DayOfMonth      = 1  # 12th of each month
     WeekdayOfMonth  = 2  # First Tuesday of each month
 
-class Event(Base):
+class Event(Model,Base):
     __tablename__ = 'events'
 
-    id         = Column( UUID, primary_key=True )
     status     = Column( Enum(EventStatus) )
     start      = Column( DateTime )
     end        = Column( DateTime )
@@ -36,21 +41,18 @@ class Event(Base):
     comments   = relationship( "EventComment", back_populates="event" )
 
 # for translatable parts of the event
-class EventInfo(Base):
+class EventInfo(Translation,Base):
     __tablename__ = 'events_i18n'
 
-    id          = Column( UUID,    primary_key=True, ForeignKey('events.id') )
-    language    = Column( VarChar, primary_key=True )
     title       = Column( Text )
     description = Column( Text )
 
     event = relationship( "Event", back_populates="info" )
 
 # for internal discussion of drafted events:
-class EventComment(Base):
+class EventComment(Model,Base):
     __tablename__ = 'event_comments'
 
-    id        = Column( UUID, primary_key = True )
     when      = Column( DateTime )
     edited    = Column( Boolean )
     event_id  = Column( UUID, ForeignKey('events.id') )
