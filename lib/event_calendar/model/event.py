@@ -1,11 +1,9 @@
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Table, String, Text, Enum, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 import enum
 from event_calendar.model import Model, Translation
-
-Base = declarative_base()
+from event_calendar.database import Base
 
 event_categories_table = Table('event_categories', Base.metadata,
     Column('event_id',    UUID, ForeignKey('events.id')),

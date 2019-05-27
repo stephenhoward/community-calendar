@@ -1,10 +1,8 @@
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Table, String, Text, Enum, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from event_calendar.model import Model, Translation
-
-Base = declarative_base()
+from event_calendar.database import Base
 
 class Category(Model,Base):
     __tablename__ = 'categories'
@@ -15,7 +13,7 @@ class Category(Model,Base):
 
 # for translatable parts of the event
 class CategoryInfo(Translation,Base):
-    __tablename__ = 'events_i18n'
+    __tablename__ = 'categories_i18n'
 
     name        = Column( Text )
     description = Column( Text )

@@ -1,40 +1,11 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint
+from event_calendar.model.category import Category
+import app.handlers as handlers
 
 categories = Blueprint('categories',__name__)
 
-def search():
-    return jsonify([
-        {
-            'id':   '12345',
-            'info': [
-                {
-                    'language': 'en',
-                    'name': 'Test'
-                }
-            ]
-        }
-    ])
-
-
-def get(category):
-    return jsonify(
-        {
-            'id':   '12345',
-            'info': [
-                {
-                    'language': 'en',
-                    'name': 'Test'
-                }
-            ]
-        }
-    )
-
-def post(category):
-    return jsonify(
-        ok = 1
-    )
-
-def update(category):
-    return jsonify(
-        ok = 1
-    )
+search = handlers.search_for(Category)
+get    = handlers.get_for(Category)
+post   = handlers.post_for(Category)
+update = handlers.update_for(Category)
+delete = handlers.delete_for(Category)
