@@ -11,20 +11,25 @@ LanguageCode = enum.Enum( 'LanguageCode', codes['LanguageCode']['enum'] )
 class Model(object):
     id = Column( UUID, primary_key=True )
 
-    def get(id):
-        return db_session.query( type(self) ).filter(type(self).id == id).one()
+    def __init__(self,**kwargs):
+        self.update(kwargs)
 
-    def create(dict):
-        model = type(self)(**dict)
+    @classmethod
+    def get(cls,id):
+        return db_session.query( cls ).filter(cls.id == id).one()
+
+    @classmethod
+    def create(cls,dict):
+        model = cls(dict)
         db_session.add(model)
         return model
 
-    def update(dict):
+    def update(self,dict):
         for key, value in dict.items():
             setattr( self, key, value )
         return self
 
-    def save():
+    def save(self):
         db_session.commit()
         return self
 
