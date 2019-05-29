@@ -2,8 +2,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-# engine = create_engine('postgresql://postgres@localhost:5432/events_calendar')
-engine = create_engine('sqlite:////tmp/test.db', convert_unicode=True)
+# TODO: locate database name in a config file, overrideable for testing
+engine = create_engine('postgresql://postgres:badpassword@postgres:5432/postgres')
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))

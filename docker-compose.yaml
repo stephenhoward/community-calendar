@@ -1,0 +1,18 @@
+version: '3'
+services:
+
+  calendar:
+    image: 'events:dev'
+    restart: always
+    hostname: 'events'
+    ports:
+      - '5000:5000'
+    volumes:
+      - '~/events/:/opt/calendar'
+
+  postgres:
+    image: postgres:11-alpine
+    restart: always
+    hostname: 'postgres'
+    environment:
+      POSTGRES_PASSWORD: badpassword
