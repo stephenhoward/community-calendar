@@ -1,0 +1,4 @@
+db:
+  credentials:   'postgres:badpassword'
+  host:     postgres
+  database: event_calendar

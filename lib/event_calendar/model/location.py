@@ -1,6 +1,6 @@
 from sqlalchemy.orm import relationship
 from event_calendar.model import Model, Translation
-from sqlalchemy import Column, Text, LargeBinary
+from sqlalchemy import Column, Text, LargeBinary, String
 from event_calendar.database import Base
 
 class Location(Model,Base):

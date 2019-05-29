@@ -2,8 +2,10 @@ import unittest
 from unittest.mock import patch
 from event_calendar.model import Model
 import event_calendar.model
-from event_calendar.database import db_session
+from event_calendar.database import DB
 from uuid import UUID, uuid4 as uuid
+
+db = DB()
 
 class TestCodes(unittest.TestCase):
 
@@ -16,7 +18,7 @@ class TestModel(unittest.TestCase):
 
     def test_create(self):
         id = uuid()
-        with patch.object( db_session, 'add', return_value = True ):
+        with patch.object( db.session, 'add', return_value = True ):
             model = Model.create( { 'id': id } )
             assert( isinstance(model,Model) )
             assert( model.id == id )
@@ -35,7 +37,7 @@ class TestModel(unittest.TestCase):
 
     def test_save(self):
         id = uuid()
-        with patch.object( db_session, 'commit', return_value = True ):
+        with patch.object( db.session, 'commit', return_value = True ):
             model = Model( id = id )
             ret = model.save()
             assert( model.id == id )
