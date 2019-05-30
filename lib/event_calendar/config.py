@@ -15,26 +15,27 @@ class Config(metaclass=Singleton):
     def __init__(self):
 
         with open("config/app.yaml",'r') as config_file:
-            self._config = yaml.load(config_file)
+            self._config = yaml.load(config_file, Loader=yaml.FullLoader)
 
     def get(self,*path):
         value = self._config
         for key in path:
             if key in value:
-                loc = value[key]
+                value = value[key]
             else:
-                raise Exception('invalid config path: ' + path )
+                raise Exception('invalid config path: ' + '/'.join(path) )
 
-        return loc
+        return value
 
     def set(self,path, value):
         path_range = range(len(path))
+        path_max   = path_range[-1]
         dict       = self._config
 
         for i in path_range:
             key = path[i]
 
-            if ( i == path_range ):
+            if ( i == path_max ):
                 dict[key] = value
             else:
                 if key not in dict:
