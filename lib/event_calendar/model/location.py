@@ -1,10 +1,11 @@
 from sqlalchemy.orm import relationship
 from event_calendar.model import Model, Translation
-from sqlalchemy import Column, Text, LargeBinary, String
+from sqlalchemy import Column, Text, LargeBinary, String, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 from event_calendar.database import Base
 
 class Location(Model,Base):
-    __tablename__ = 'location'
+    __tablename__ = 'locations'
 
     address1 = Column( String )
     address2 = Column( String )
@@ -16,6 +17,7 @@ class Location(Model,Base):
 class LocationInfo(Translation,Base):
     __tablename__ = 'location_i18n'
 
+    id          = Column( UUID(as_uuid=True), ForeignKey('locations.id'), primary_key=True )
     name        = Column( Text )
     description = Column( Text )
     accessibility_information = Column( Text )

@@ -7,16 +7,17 @@ from event_calendar.database import Base
 class Category(Model,Base):
     __tablename__ = 'categories'
 
-    id     = Column( UUID, primary_key=True )
-    info   = relationship( "CategoryInfo", back_populates="category" )
+    id     = Column( UUID(as_uuid=True), primary_key=True )
+    info   = relationship( "CategoryInfo" )
     images = relationship( "Image" )
 
 # for translatable parts of the event
 class CategoryInfo(Translation,Base):
     __tablename__ = 'categories_i18n'
 
+    id          = Column( UUID(as_uuid=True), ForeignKey('categories.id'), primary_key=True )
     name        = Column( Text )
     description = Column( Text )
 
-    category = relationship( "Category", back_populates="info" )
+    category = relationship( "Category" )
 

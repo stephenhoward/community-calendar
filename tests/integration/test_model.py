@@ -17,6 +17,7 @@ class StoredModel(Model,Base):
 class TestModel(unittest.TestCase):
 
     def setUp(self):
+
         config.set(['db','database'],'test_model')
         db.build_engine()
         db.create_db()

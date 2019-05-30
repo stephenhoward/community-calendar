@@ -11,7 +11,7 @@ codes = yaml.load( open('config/language_codes.yaml','r'), Loader=yaml.FullLoade
 LanguageCode = enum.Enum( 'LanguageCode', codes['LanguageCode']['enum'] )
 
 class Model(object):
-    id = Column( UUIDColumn, primary_key=True )
+    id = Column( UUIDColumn(as_uuid=True), primary_key=True )
 
     def __init__(self,**kwargs):
         self.update(kwargs)

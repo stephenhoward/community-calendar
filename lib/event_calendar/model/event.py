@@ -6,8 +6,8 @@ from event_calendar.model import Model, Translation
 from event_calendar.database import Base
 
 event_categories_table = Table('event_categories', Base.metadata,
-    Column('event_id',    UUID, ForeignKey('events.id')),
-    Column('category_id', UUID, ForeignKey('categories.id'))
+    Column('event_id',    UUID(as_uuid=True), ForeignKey('events.id')),
+    Column('category_id', UUID(as_uuid=True), ForeignKey('categories.id'))
 )
 
 EventStatus = enum.Enum( 'EventStatus', [
@@ -41,12 +41,14 @@ class Event(Model,Base):
     dates_only    = Column( Boolean )
     repeat        = Column( Enum(EventRepeat) )
     repeat_by     = Column( Enum(EventRepeatBy) )
+    location_id   = Column( UUID(as_uuid=True), ForeignKey('locations.id') )
     contact_phone = Column( String )
     contact_email = Column( String )
+    parent_id     = Column( UUID(as_uuid=True), ForeignKey('events.id') )
 
     urls       = relationship( "EventLink" )
-    info       = relationship( "EventInfo", back_populates="event" )
-    categories = relationship( "Event", secondary="event_categories_table" )
+    info       = relationship( "EventInfo" )
+    categories = relationship( "Event", secondary=event_categories_table )
     images     = relationship( "Image" )
     events     = relationship( "Event" )
     location   = relationship( "Location" )
@@ -55,6 +57,7 @@ class Event(Model,Base):
 class EventLink(Model,Base):
     __tablename__ = 'event_links'
 
+    event_id = Column( UUID(as_uuid=True), ForeignKey('events.id') )
     url = Column( String )
     type = Column( Enum(LinkType) )
 
@@ -62,11 +65,12 @@ class EventLink(Model,Base):
 class EventInfo(Translation,Base):
     __tablename__ = 'events_i18n'
 
+    id          = Column( UUID(as_uuid=True), ForeignKey('events.id'), primary_key=True )
     title       = Column( Text )
     description = Column( Text )
     accessibility_information = Column( Text )
 
-    event = relationship( "Event", back_populates="info" )
+    event = relationship( "Event" )
 
 # for internal discussion of drafted events:
 class EventComment(Model,Base):
@@ -74,9 +78,9 @@ class EventComment(Model,Base):
 
     when      = Column( DateTime )
     edited    = Column( Boolean )
-    event_id  = Column( UUID, ForeignKey('events.id') )
-    author_id = Column( UUID, ForeignKey('users.id') )
-    parent_id = Column( UUID, ForeignKey('event_comments.id') )
+    event_id  = Column( UUID(as_uuid=True), ForeignKey('events.id') )
+    author_id = Column( UUID(as_uuid=True), ForeignKey('users.id') )
+    parent_id = Column( UUID(as_uuid=True), ForeignKey('event_comments.id') )
     contents  = Column( Text )
     event          = relationship( "Event" )
     author         = relationship( "User" )
