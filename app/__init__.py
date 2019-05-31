@@ -6,8 +6,9 @@ def create_app():
 
     from app.events     import events
     from app.categories import categories
-    from event_calendar.database import db_session
+    from event_calendar.database import DB
 
+    db    = DB()
     flask = connexion.FlaskApp(__name__, specification_dir='../config/')
 
     flask.app.register_blueprint(events)
@@ -16,7 +17,7 @@ def create_app():
 
     @flask.app.teardown_appcontext
     def shutdown_session(exception=None):
-        db_session.remove()
+        db.session.remove()
 
     return flask.app
 
