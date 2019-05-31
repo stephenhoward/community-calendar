@@ -1,4 +1,6 @@
 from sqlalchemy import Column, Enum
+from sqlalchemy.inspection import inspect
+from sqlalchemy.orm.relationships import RelationshipProperty
 from sqlalchemy.dialects.postgresql import UUID as UUIDColumn
 from event_calendar.database import DB
 import enum
@@ -32,8 +34,30 @@ class Model(object):
         return model
 
     def update(self,dict):
+
+        mapper = inspect(type(self))
+
         for key, value in dict.items():
-            setattr( self, key, value )
+
+            attr = mapper.attrs[key]
+
+            if ( isinstance( attr, RelationshipProperty ) ):
+
+                other_cls = attr.mapper.class_
+
+                if ( attr.uselist ):
+                    setattr( self, key, list(map(
+                        lambda v: v if isinstance(v,other_cls) else other_cls.create(v),
+                        value
+                    )) )
+                else:
+                    if ( isinstance( value, other_cls ) ):
+                        setattr( self, key, value )
+                    else:
+                        setattr( self, key, other_cls.create(value) )
+            else:
+                setattr( self, key, value )
+
         return self
 
     def save(self):
