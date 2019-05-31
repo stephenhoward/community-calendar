@@ -1,10 +1,21 @@
 version: '3'
 services:
 
-  calendar:
+  # From the community-events-web repo:
+  web:
+    image: 'events-web:dev'
+    restart: always
+    hostname: 'web'
+    ports:
+      - '80:80'
+    volumes:
+      - '~/events_web/_build:/opt/calendar'
+
+
+  api:
     image: 'events:dev'
     restart: always
-    hostname: 'events'
+    hostname: 'api'
     ports:
       - '5000:5000'
     volumes:
