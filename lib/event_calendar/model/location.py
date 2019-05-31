@@ -12,7 +12,7 @@ class Location(Model,Base):
     city     = Column( String )
     state    = Column( String )
     postal_code = Column( String )
-    info = relationship( "LocationInfo" )
+    info = relationship( "LocationInfo", lazy='joined' )
 
 class LocationInfo(Translation,Base):
     __tablename__ = 'location_i18n'

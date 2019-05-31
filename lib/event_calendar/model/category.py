@@ -8,8 +8,8 @@ class Category(Model,Base):
     __tablename__ = 'categories'
 
     id     = Column( UUID(as_uuid=True), primary_key=True )
-    info   = relationship( "CategoryInfo" )
-    images = relationship( "Image" )
+    info   = relationship( "CategoryInfo", lazy='joined' )
+    images = relationship( "CategoryImage" )
 
 # for translatable parts of the event
 class CategoryInfo(Translation,Base):

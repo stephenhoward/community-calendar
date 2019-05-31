@@ -8,7 +8,7 @@ class Image(Model,Base):
     __tablename__ = 'images'
 
     data = Column( LargeBinary )
-    info = relationship( "ImageInfo" )
+    info = relationship( "ImageInfo", lazy='joined' )
 
 class EventImage(Image):
 

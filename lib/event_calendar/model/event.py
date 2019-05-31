@@ -1,9 +1,12 @@
 from sqlalchemy import Column, Table, String, Text, Enum, Boolean, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.dialects.postgresql import UUID
 import enum
 from event_calendar.model import Model, Translation
 from event_calendar.database import Base
+import event_calendar.model.image
+import event_calendar.model.location
+import event_calendar.model.user
 
 event_categories_table = Table('event_categories', Base.metadata,
     Column('event_id',    UUID(as_uuid=True), ForeignKey('events.id')),
@@ -35,6 +38,7 @@ LinkType = enum.Enum( 'LinkType', [
 class Event(Model,Base):
     __tablename__ = 'events'
 
+    id            = Column( UUID(as_uuid=True), primary_key=True )
     status        = Column( Enum(EventStatus) )
     start         = Column( DateTime )
     end           = Column( DateTime )
@@ -47,10 +51,10 @@ class Event(Model,Base):
     parent_id     = Column( UUID(as_uuid=True), ForeignKey('events.id') )
 
     urls       = relationship( "EventLink" )
-    info       = relationship( "EventInfo" )
+    info       = relationship( "EventInfo", lazy='joined' )
     categories = relationship( "Event", secondary=event_categories_table )
-    images     = relationship( "Image" )
-    events     = relationship( "Event" )
+    images     = relationship( "EventImage" )
+    events     = relationship( "Event", backref=backref("parent", remote_side=[id])  )
     location   = relationship( "Location" )
     comments   = relationship( "EventComment", back_populates="event" )
 
@@ -58,8 +62,8 @@ class EventLink(Model,Base):
     __tablename__ = 'event_links'
 
     event_id = Column( UUID(as_uuid=True), ForeignKey('events.id') )
-    url = Column( String )
-    type = Column( Enum(LinkType) )
+    url      = Column( String )
+    type     = Column( Enum(LinkType) )
 
 # for translatable parts of the event
 class EventInfo(Translation,Base):
@@ -76,14 +80,15 @@ class EventInfo(Translation,Base):
 class EventComment(Model,Base):
     __tablename__ = 'event_comments'
 
+    id        = Column( UUID(as_uuid=True), primary_key=True )
     when      = Column( DateTime )
     edited    = Column( Boolean )
     event_id  = Column( UUID(as_uuid=True), ForeignKey('events.id') )
     author_id = Column( UUID(as_uuid=True), ForeignKey('users.id') )
     parent_id = Column( UUID(as_uuid=True), ForeignKey('event_comments.id') )
     contents  = Column( Text )
-    event          = relationship( "Event" )
-    author         = relationship( "User" )
-    parent_comment = relationship( "EventComment" )
-    child_comments = relationship( "EventComment" )
+
+    event     = relationship( "Event", back_populates="comments" )
+    author    = relationship( "User" )
+    children  = relationship( "EventComment", backref=backref("parent", remote_side=[id])  )
 
