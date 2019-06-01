@@ -3,16 +3,28 @@ from event_calendar.config import config
 
 
 import unittest
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 from event_calendar.model import Model
 from event_calendar.database import DB, Base
 
 db = DB()
 
-class StoredModel(Model,Base):
-    __tablename__ = 'stored_models'
+class ChildModel(Model,Base):
 
-    name = Column(String)
+    __tablename__ = 'child_models'
+
+    name      = Column(String)
+    parent_id = Column( UUID(as_uuid=True), ForeignKey("parent_models.id") )
+    parent    = relationship("ParentModel")
+
+class ParentModel(Model,Base):
+
+    __tablename__ = 'parent_models'
+
+    name     = Column(String)
+    children = relationship( "ChildModel", back_populates="parent" )
 
 class TestModel(unittest.TestCase):
 
@@ -26,11 +38,26 @@ class TestModel(unittest.TestCase):
         db.destroy_db()
 
     def test_round_trip(self):
-        model = StoredModel.create({ 'name': 'Foo' })
+        model = ParentModel.create({ 'name': 'Foo' })
         ret = model.save()
         assert( ret == model )
-        model2 = StoredModel.get(model.id)
+        model2 = ParentModel.get(model.id)
         assert( model2 == model )
+
+    def test_complex_round_trip(self):
+        model = ParentModel.create({
+            "name": "FOO",
+            "children":[
+                { "name": "BAR" },
+                { "name": "BAZ" }
+            ]
+        })
+        ret = model.save()
+        assert( ret == model )
+        model2 = ParentModel.get(model.id)
+        assert( model2 == model )
+        assert( len(model2.children) == 2 )
+
 
 if __name__ == '__main__':
     unittest.main()
