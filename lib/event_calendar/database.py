@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, session
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.exc import OperationalError
 from event_calendar.config import config, Singleton
 
 Base = declarative_base()
@@ -14,14 +15,22 @@ class DB(object, metaclass=Singleton):
         self.build_engine()
 
     def create_db(self):
-        import event_calendar.model.user
-        import event_calendar.model.image
-        import event_calendar.model.location
-        import event_calendar.model.event
-        import event_calendar.model.category
 
-        self._db_exec('create database ' + config.get('db')['database'])
-        Base.metadata.create_all(bind=self.engine)
+        try:
+            conn = self.engine.connect()
+            conn.execute('select 1')
+            print('Database Exists')
+
+        except OperationalError:
+            import event_calendar.model.user
+            import event_calendar.model.image
+            import event_calendar.model.location
+            import event_calendar.model.event
+            import event_calendar.model.category
+
+            self._db_exec('create database ' + config.get('db')['database'])
+            Base.metadata.create_all(bind=self.engine)
+            print('Database Created')
 
     def destroy_db(self):
         session.close_all_sessions()
