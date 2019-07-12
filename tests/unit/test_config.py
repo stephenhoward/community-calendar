@@ -18,3 +18,6 @@ class TestConfig(unittest.TestCase):
         self.assertRaises( Exception, config.get, 'not', 'a', 'key' )
         config.set(['not','a','key'], 'bar' )
         assert(config.get('not','a','key') == 'bar')
+
+if __name__ == '__main__':
+    unittest.main()

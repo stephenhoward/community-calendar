@@ -213,10 +213,10 @@ paths:
         '200':
           $ref: '#/components/responses/Ok'
 
-  /events/{event}:
+  /events/{id}:
     parameters:
       - in: path
-        name: event
+        name: id
         required: true
         schema:
           type: string
@@ -263,10 +263,10 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/Ok'
-  /categories/{category}:
+  /categories/{id}:
     parameters:
       - in: path
-        name: category
+        name: id
         required: true
         schema:
           type: string

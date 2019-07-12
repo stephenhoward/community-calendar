@@ -1,3 +1,7 @@
+import sys
+
+sys.path.append('/opt/calendar')
+
 import unittest
 from app import create_app
 from unittest.mock import patch
@@ -16,7 +20,7 @@ class TestAPI(unittest.TestCase):
 
     def test_events_search(self):
         with patch.object( Query, 'all', return_value = [
-            Event( id = uuid() )
+            { 'id': uuid() }
         ]):
             res = self.client.get('/v1/events')
             assert(res.status_code == 200 )
@@ -24,6 +28,9 @@ class TestAPI(unittest.TestCase):
     def test_event_get(self):
         id = uuid()
         print('/v1/events/' + str(id) )
-        with patch.object( Query, 'one', return_value = Event( id = id ) ):
+        with patch.object( Query, 'one', return_value = { 'id': id } ):
             res = self.client.get('/v1/events/' + str(id) )
             assert(res.status_code == 200 )
+
+if __name__ == '__main__':
+    unittest.main()

@@ -25,9 +25,16 @@ class Model(object):
     def search(cls,**kwargs):
         return cls._search( db.session.query(cls), **kwargs )
 
-    # no-op, to be overwritten in subclasses
     @classmethod
     def _search(cls,query,**kwargs):
+
+        mapper = inspect(cls)
+
+        for key,value in kwargs.items():
+
+            if mapper.attrs[key]:
+                query = query.filter_by( **{ key:value } )
+
         return query
 
     @classmethod

@@ -7,7 +7,6 @@ from event_calendar.database import Base
 import event_calendar.model.image
 import event_calendar.model.location
 import event_calendar.model.user
-import logging
 
 event_categories_table = Table('event_categories', Base.metadata,
     Column('event_id',    UUID(as_uuid=True), ForeignKey('events.id')),
@@ -68,7 +67,6 @@ class Event(Model,Base):
         elif( 'to' in kwargs ):
             query = query.filter( cls.start < kwargs['to'] )
 
-        logging.warning( query.statement.compile() )
         return query
 
 class EventLink(Model,Base):

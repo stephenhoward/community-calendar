@@ -7,8 +7,8 @@ def search_for(cls):
     return search
 
 def get_for(cls):
-    def get(id):
-        model = cls.get(id)
+    def get(**kwargs):
+        model = cls.get(kwargs['id'])
 
         if ( model ):
             return jsonify( model )
