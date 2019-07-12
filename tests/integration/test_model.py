@@ -58,6 +58,20 @@ class TestModel(unittest.TestCase):
         assert( model2 == model )
         assert( len(model2.children) == 2 )
 
+    def test_simple_search(self):
+        model   = ParentModel.create({ 'name': 'Bar' }).save()
+        model2  = ParentModel.create({ 'name': 'Baz' }).save()
+
+        models  = ParentModel.search(**{
+            'name': 'Gone'
+        })
+        assert( len(models.all()) == 0 )
+
+        models  = ParentModel.search(**{
+            'name': 'Bar'
+        })
+        assert( len(models.all()) == 1 )
+
 
 if __name__ == '__main__':
     unittest.main()
