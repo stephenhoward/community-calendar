@@ -22,6 +22,15 @@ class Model(object):
             self.id = uuid()
 
     @classmethod
+    def search(cls,**kwargs):
+        return cls._search( db.session.query(cls), **kwargs )
+
+    # no-op, to be overwritten in subclasses
+    @classmethod
+    def _search(cls,query,**kwargs):
+        return query
+
+    @classmethod
     def get(cls,id):
         return db.session.query( cls ). \
             filter(cls.id == id). \

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Table, String, Text, Enum, Boolean, DateTime, ForeignKey
+from sqlalchemy import Column, Table, String, Text, Enum, Boolean, DateTime, ForeignKey, tuple_
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.dialects.postgresql import UUID
 import enum
@@ -7,6 +7,7 @@ from event_calendar.database import Base
 import event_calendar.model.image
 import event_calendar.model.location
 import event_calendar.model.user
+import logging
 
 event_categories_table = Table('event_categories', Base.metadata,
     Column('event_id',    UUID(as_uuid=True), ForeignKey('events.id')),
@@ -57,6 +58,18 @@ class Event(Model,Base):
     events     = relationship( "Event", backref=backref("parent", remote_side=[id])  )
     location   = relationship( "Location" )
     comments   = relationship( "EventComment", back_populates="event" )
+
+    @classmethod
+    def _search(cls,query,**kwargs):
+        if ( 'from' in kwargs and 'to' in kwargs ):
+            query = query.filter(  tuple_(cls.start,cls.end).op( 'overlaps' )( tuple_(kwargs['from'], kwargs['to']) )  )
+        elif( 'from' in kwargs ):
+            query = query.filter( cls.end > kwargs['from'] )
+        elif( 'to' in kwargs ):
+            query = query.filter( cls.start < kwargs['to'] )
+
+        logging.warning( query.statement.compile() )
+        return query
 
 class EventLink(Model,Base):
     __tablename__ = 'event_links'

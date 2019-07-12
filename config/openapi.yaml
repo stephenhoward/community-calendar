@@ -12,13 +12,13 @@ servers:
 components:
   parameters:
     startParam:
-      name: start
+      name: from
       in: query
       schema:
         type: string
         format: date
     endParam:
-      name: end
+      name: to
       in: query
       schema:
         type: string
@@ -189,6 +189,10 @@ paths:
         - $ref: '#/components/parameters/categoryParam'
         - $ref: '#/components/parameters/startParam'
         - $ref: '#/components/parameters/endParam'
+        - name: search
+          in: query
+          schema:
+            type: string
       responses:
         '200':
           description: Ok

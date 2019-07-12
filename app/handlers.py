@@ -2,17 +2,8 @@ from flask import jsonify, request, abort
 
 def search_for(cls):
     def search():
-        return jsonify([
-            {
-                'id':   '12345',
-                'info': [
-                    {
-                        'language': 'en',
-                        'name': 'Test'
-                    }
-                ]
-            }
-        ])
+        q = cls.search(**request.args)
+        return jsonify( q.all() )
     return search
 
 def get_for(cls):

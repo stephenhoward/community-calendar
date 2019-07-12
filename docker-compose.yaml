@@ -9,7 +9,7 @@ services:
     ports:
       - '80:80'
     volumes:
-      - '~/events_web/_build:/opt/calendar'
+      - '~/events_web/app:/opt/calendar/app'
 
 
   api:
