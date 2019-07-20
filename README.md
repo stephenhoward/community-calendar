@@ -4,6 +4,9 @@ This project will be a web-based community events calendar.  It is intended to b
 of administrator/editors to accept submissions from local registered people or organizations of
 events open to the pubic in a city to share with the community.
 
+This repository contains the API that will support the web-front end and any other applications that
+could take advantage of it.
+
 ## Events and Series: What the calendar is built out of
 
 ### Events
@@ -21,7 +24,7 @@ If some events are part of a larger program, you can group them into a series to
 ### The Public
 
 The public can browse, search and share events listed on the calendar. They can RSVP for events and
-reach out to event organizers if the appropriate links and information is posted to the event.
+reach out to event organizers if the appropriate links and information are posted to the event.
 
 ### Contributors
 
