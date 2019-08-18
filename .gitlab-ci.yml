@@ -28,7 +28,7 @@ test:
     entrypoint: [""]
   script:
     - cd /opt/calendar
-    - npm test
+    - python3 -m unittest -v tests/unit/*
 
 register:
   stage: register
