@@ -4,6 +4,7 @@ def create_app():
 
     from connexion.resolver import RestyResolver
 
+    from app.site       import site
     from app.events     import events
     from app.categories import categories
     from event_calendar.database import DB

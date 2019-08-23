@@ -39,6 +39,25 @@ components:
     Ok:
       description: Ok
   schemas:
+    Site:
+      properties:
+        info:
+          type: array
+          items:
+            type: object
+            properties:
+              language:
+                $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
+              title:
+                type: string
+        default_language:
+          $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
+        languages:
+          type: array
+          items:
+            $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
+        header_image:
+          $ref: '#/components/schemas/Image'
     Category:
       properties:
         id:
@@ -183,6 +202,26 @@ components:
               - $ref: '#/components/schemas/Event'
 
 paths:
+  /site:
+    get:
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Site'
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Site'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+
   /events:
     get:
       parameters:
