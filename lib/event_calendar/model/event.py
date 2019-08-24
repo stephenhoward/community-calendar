@@ -2,20 +2,26 @@ from sqlalchemy import Column, Table, String, Text, Enum, Boolean, DateTime, For
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.dialects.postgresql import UUID
 import enum
-from event_calendar.model import Model, Translation
+from event_calendar.model import Model, Translation, ContentStatus
 from event_calendar.database import Base
-import event_calendar.model.image
 import event_calendar.model.location
 import event_calendar.model.user
+import event_calendar.model.comment
+from event_calendar.model.link import EventLink
 
 event_categories_table = Table('event_categories', Base.metadata,
     Column('event_id',    UUID(as_uuid=True), ForeignKey('events.id')),
     Column('category_id', UUID(as_uuid=True), ForeignKey('categories.id'))
 )
 
-EventStatus = enum.Enum( 'EventStatus', [
-    'Draft',
-    'Active'
+EventAge = enum.Enum( 'EventAge', [
+    '21+',
+    '18+',
+    'All Ages',
+    'Youth',
+    'Big Kids',
+    'Little Kids',
+    'Kids'
 ])
 
 EventRepeat = enum.Enum( 'EventRepeat', [
@@ -29,17 +35,11 @@ EventRepeatBy = enum.Enum( 'EventRepeatBy', [
     'WeekdayOfMonth' # First Tuesday of each month
 ])
 
-LinkType = enum.Enum( 'LinkType', [
-    'Information',
-    'Tickets',
-    'RSVP'
-])
-
 class Event(Model,Base):
     __tablename__ = 'events'
 
     id            = Column( UUID(as_uuid=True), primary_key=True )
-    status        = Column( Enum(EventStatus) )
+    status        = Column( Enum(ContentStatus) )
     start         = Column( DateTime )
     end           = Column( DateTime )
     dates_only    = Column( Boolean )
@@ -48,15 +48,15 @@ class Event(Model,Base):
     location_id   = Column( UUID(as_uuid=True), ForeignKey('locations.id') )
     contact_phone = Column( String )
     contact_email = Column( String )
-    parent_id     = Column( UUID(as_uuid=True), ForeignKey('events.id') )
+    series_id     = Column( UUID(as_uuid=True), ForeignKey('series.id') )
 
     urls       = relationship( "EventLink" )
     info       = relationship( "EventInfo", lazy='joined' )
     categories = relationship( "Event", secondary=event_categories_table )
     images     = relationship( "EventImage" )
-    events     = relationship( "Event", backref=backref("parent", remote_side=[id])  )
     location   = relationship( "Location" )
     comments   = relationship( "EventComment", back_populates="event" )
+    series     = relationship( "Series", back_populates="events" )
 
     @classmethod
     def _search(cls,query,**kwargs):
@@ -69,13 +69,6 @@ class Event(Model,Base):
 
         return query
 
-class EventLink(Model,Base):
-    __tablename__ = 'event_links'
-
-    event_id = Column( UUID(as_uuid=True), ForeignKey('events.id') )
-    url      = Column( String )
-    type     = Column( Enum(LinkType) )
-
 # for translatable parts of the event
 class EventInfo(Translation,Base):
     __tablename__ = 'events_i18n'
@@ -86,20 +79,4 @@ class EventInfo(Translation,Base):
     accessibility_information = Column( Text )
 
     event = relationship( "Event" )
-
-# for internal discussion of drafted events:
-class EventComment(Model,Base):
-    __tablename__ = 'event_comments'
-
-    id        = Column( UUID(as_uuid=True), primary_key=True )
-    when      = Column( DateTime )
-    edited    = Column( Boolean )
-    event_id  = Column( UUID(as_uuid=True), ForeignKey('events.id') )
-    author_id = Column( UUID(as_uuid=True), ForeignKey('users.id') )
-    parent_id = Column( UUID(as_uuid=True), ForeignKey('event_comments.id') )
-    contents  = Column( Text )
-
-    event     = relationship( "Event", back_populates="comments" )
-    author    = relationship( "User" )
-    children  = relationship( "EventComment", backref=backref("parent", remote_side=[id])  )
 

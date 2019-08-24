@@ -3,6 +3,7 @@ from sqlalchemy.inspection import inspect
 from sqlalchemy.orm.relationships import RelationshipProperty
 from sqlalchemy.dialects.postgresql import UUID as UUIDColumn
 from event_calendar.database import DB
+from sqlalchemy.orm.exc import NoResultFound
 import enum
 import yaml
 from uuid import UUID, uuid4 as uuid
@@ -10,7 +11,11 @@ from uuid import UUID, uuid4 as uuid
 db    = DB()
 codes = yaml.load( open('config/language_codes.yaml','r'), Loader=yaml.FullLoader )
 
-LanguageCode = enum.Enum( 'LanguageCode', codes['LanguageCode']['enum'] )
+LanguageCode  = enum.Enum( 'LanguageCode', codes['LanguageCode']['enum'] )
+ContentStatus = enum.Enum( 'ContentStatus', [
+    'Draft',
+    'Active'
+])
 
 class Model(object):
     id = Column( UUIDColumn(as_uuid=True), primary_key=True )
@@ -39,9 +44,12 @@ class Model(object):
 
     @classmethod
     def get(cls,id):
-        return db.session.query( cls ). \
-            filter(cls.id == id). \
-            one()
+        try:
+            return db.session.query( cls ). \
+                filter(cls.id == id). \
+                one()
+        except NoResultFound:
+            return None
 
     @classmethod
     def create(cls,dict):
