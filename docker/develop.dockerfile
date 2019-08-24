@@ -1,6 +1,8 @@
 FROM python:3-alpine
 
 ENV HOME /opt/calendar
+ENV DATA /var/calendar/data
+RUN mkdir -p ${DATA}
 
 COPY requirements.txt ${HOME}/requirements.txt
 

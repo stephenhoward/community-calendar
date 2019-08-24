@@ -17,15 +17,15 @@ class SiteSettings(metaclass=Singleton):
         self._settings = {}
 
         try:
-            with open("data/site.yaml",'r') as settings_file:
+            with open("/var/calendar/data/site.yaml",'r') as settings_file:
                 self._settings = yaml.load(settings_file, Loader=yaml.FullLoader)
         except FileNotFoundError:
-            with open("data/site.default.yaml",'r') as settings_file:
+            with open("config/site.default.yaml",'r') as settings_file:
                 self._settings = yaml.load(settings_file, Loader=yaml.FullLoader)
                 self.save()
 
     def save(self):
-        with open("data/site.yaml",'w') as settings_file:
+        with open("/var/calendar/data/site.yaml",'w') as settings_file:
             yaml.dump(self._settings, settings_file)
 
     @property
