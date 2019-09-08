@@ -221,6 +221,22 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/Ok'
+  /site/image:
+    post:
+      operationId: app.site.post_image
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Ok
 
   /events:
     get:
@@ -281,6 +297,43 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/Ok'
+  /events/{id}/image:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: app.events.post_image
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Ok
+    get:
+      operationId: app.events.get_image
+      responses:
+        '200':
+          description: Ok
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
   /categories:
     get:
       parameters:
