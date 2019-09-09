@@ -44,6 +44,14 @@ class TestModel(unittest.TestCase):
             assert( isinstance(model_no_id,Model) )
             assert( isinstance(model_no_id.id, UUID ) )
 
+    def test_dump(self):
+        params = {
+          'id': uuid(),
+          'name': 'dumped'
+        }
+        model = ParentModel.create(params)
+        self.assertDictEqual( params, model.dump() )
+
     def test_update(self):
         id = uuid()
         model = ParentModel( id = id )

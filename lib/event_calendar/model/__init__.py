@@ -88,5 +88,8 @@ class Model(object):
         db.session.commit()
         return self
 
+    def dump(self):
+        return { c.name: getattr(self,c.name) for c in self.__table__.columns }
+
 class Translation(Model):
     language = Column( Enum(LanguageCode), primary_key=True )
