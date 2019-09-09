@@ -1,7 +1,5 @@
-from flask import Blueprint, jsonify, request, abort
+from flask import jsonify, request
 from event_calendar.site_settings import site_settings
-
-site = Blueprint('site',__name__)
 
 def search():
     return jsonify( site_settings )

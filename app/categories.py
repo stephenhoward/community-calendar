@@ -1,8 +1,5 @@
-from flask import Blueprint
 from event_calendar.model.category import Category
 import app.handlers as handlers
-
-categories = Blueprint('categories',__name__)
 
 search = handlers.search_for(Category)
 get    = handlers.get_for(Category)
