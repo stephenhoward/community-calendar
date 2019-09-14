@@ -2,7 +2,7 @@ from sqlalchemy import Column, Table, String, Text, Enum, Boolean, DateTime, For
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.dialects.postgresql import UUID
 import enum
-from event_calendar.model import Model, Translation, ContentStatus
+from event_calendar.model import TranslatableModel, Translation, ContentStatus
 from event_calendar.database import Base
 import event_calendar.model.location
 import event_calendar.model.user
@@ -35,7 +35,7 @@ EventRepeatBy = enum.Enum( 'EventRepeatBy', [
     'WeekdayOfMonth' # First Tuesday of each month
 ])
 
-class Event(Model,Base):
+class Event(TranslatableModel,Base):
     __tablename__ = 'events'
 
     id            = Column( UUID(as_uuid=True), primary_key=True )

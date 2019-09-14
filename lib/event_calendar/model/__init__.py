@@ -91,5 +91,17 @@ class Model(object):
     def dump(self):
         return { c.name: getattr(self,c.name) for c in self.__table__.columns }
 
+class TranslatableModel(Model):
+
+    def dump(self):
+        d = super().dump()
+
+        if 'info' in inspect(type(self)).relationships.items():
+            d[info] = {}
+            for info in self.info:
+                d['info'][info.language] = info.dump()
+
+        return d
+
 class Translation(Model):
     language = Column( Enum(LanguageCode), primary_key=True )

@@ -2,7 +2,7 @@ from sqlalchemy import Column, Table, String, Text, Enum, Boolean, DateTime, For
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.dialects.postgresql import UUID
 import enum
-from event_calendar.model import Model, Translation, ContentStatus
+from event_calendar.model import TranslatableModel, Translation, ContentStatus
 from event_calendar.database import Base
 import event_calendar.model.image
 import event_calendar.model.location
@@ -14,7 +14,7 @@ SeriesStatus = enum.Enum( 'SeriesStatus', [
     'Active'
 ])
 
-class Series(Model,Base):
+class Series(TranslatableModel,Base):
     __tablename__ = 'series'
 
     id            = Column( UUID(as_uuid=True), primary_key=True )
