@@ -24,6 +24,20 @@ class SiteSettings(metaclass=Singleton):
                 self._settings = yaml.load(settings_file, Loader=yaml.FullLoader)
                 self.save()
 
+    def dump(self):
+        return self._settings
+
+    def update_values(self,**kwargs):
+
+        for setting in kwargs:
+            print(setting)
+
+            if setting == 'info':
+                for lang in kwargs['info']:
+                    self.set_info( lang, kwargs['info'][lang] )
+            else:
+                setattr(self, setting, kwargs[setting])
+
     def save(self):
         with open("/var/calendar/data/site.yaml",'w') as settings_file:
             yaml.dump(self._settings, settings_file)
@@ -66,7 +80,6 @@ class SiteSettings(metaclass=Singleton):
         else:
             self._settings['splash_image'] = SiteImage.filename
 
-    @property
     def info(self,lang):
         if lang:
             if lang in languages:
@@ -76,11 +89,10 @@ class SiteSettings(metaclass=Singleton):
         else:
             return self._settings['info'] or {}
 
-    @info.setter
-    def info(self,info,lang):
+    def set_info(self,lang,info):
         if lang:
             if lang in languages:
-                self._validate_info(dict(zip((lang),(info))))
+                self._validate_info(dict(zip([lang],[info])))
                 self._settings['info'][lang] = info
             else:
                 raise LanguageException(lang)
@@ -92,7 +104,12 @@ class SiteSettings(metaclass=Singleton):
         for lang,data in info.items():
             if lang not in languages:
                 raise LanguageException(lang)
-            if not isinstance(x,dict):
+            if not isinstance(data,dict):
                 raise Exception('Site info must be a dict')
+            for key,value in data.items():
+                if not isinstance( value, str ):
+                    raise Exception( '"' + key + '" ('+ lang +'): translatable values must be strings')
+                if key not in ['site_title']:
+                    raise Exception( '"' + key + '" is not a permitted translatable site setting')
 
 site_settings = SiteSettings()

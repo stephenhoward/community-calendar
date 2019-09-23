@@ -9,5 +9,7 @@ def search():
     return jsonify( site_settings )
 
 def post():
-    request.json
+    site_settings.update_values( **request.json['model'] )
+    site_settings.save()
+
     return jsonify( site_settings )
