@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from event_calendar.site_settings import site_settings
+from event_calendar.site_settings import site_settings, languages
 from event_calendar.model.image import SiteImage
 import app.handlers as handlers
 
@@ -13,3 +13,6 @@ def post():
     site_settings.save()
 
     return jsonify( site_settings )
+
+def get_languages():
+    return jsonify( languages )

@@ -9,9 +9,9 @@ import yaml
 from uuid import UUID, uuid4 as uuid
 
 db    = DB()
-codes = yaml.load( open('config/language_codes.yaml','r'), Loader=yaml.FullLoader )
+codes = yaml.load( open('config/languages.yaml','r'), Loader=yaml.FullLoader )
 
-LanguageCode  = enum.Enum( 'LanguageCode', codes['LanguageCode']['enum'] )
+LanguageCode  = enum.Enum( 'LanguageCode', list(codes.keys()) )
 ContentStatus = enum.Enum( 'ContentStatus', [
     'Draft',
     'Active'

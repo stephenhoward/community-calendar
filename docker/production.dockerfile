@@ -10,3 +10,5 @@ COPY bin    ${HOME}/bin
 COPY config ${HOME}/config
 COPY lib    ${HOME}/lib
 COPY tests  ${HOME}/tests
+
+RUN python3 bin/compile_languages_enum.py

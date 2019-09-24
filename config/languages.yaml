@@ -1,0 +1,549 @@
+aa:
+  iso_name:  Afar
+  name:      Afaraf
+ab:
+  iso_name:  Abkhazian
+  name:      аҧсуа бызшәа, аҧсшәа
+af:
+  iso_name:  Afrikaans
+  name:      Afrikaans
+ak:
+  iso_name:  Akan
+  name:      Akan
+am:
+  iso_name:  Amharic
+  name:      አማርኛ
+an:
+  iso_name:  Aragonese
+  name:      aragonés
+ar:
+  iso_name:  Arabic
+  name:      العربية
+  rtl:       true
+as:
+  iso_name:  Assamese
+  name:      অসমীয়া
+av:
+  iso_name:  Avaric
+  name:      авар мацӀ, магӀарул мацӀ
+ay:
+  iso_name:  Aymara
+  name:      aymar aru
+az:
+  iso_name:  Azerbaijani
+  name:      azərbaycan dili
+ba:
+  iso_name:  Bashkir
+  name:      башҡорт теле
+be:
+  iso_name:  Belarusian
+  name:      беларуская мова
+bg:
+  iso_name:  Bulgarian
+  name:      български език
+bh:
+  iso_name:  Bihari languages
+  name:      भोजपुरी
+bi:
+  iso_name:  Bislama
+  name:      Bislama
+bm:
+  iso_name:  Bambara
+  name:      bamanankan
+bn:
+  iso_name:  Bengali
+  name:      বাংলা
+bo:
+  iso_name:  Tibetan
+  name:      བོད་ཡིག
+br:
+  iso_name:  Breton
+  name:      brezhoneg
+bs:
+  iso_name:  Bosnian
+  name:      bosanski jezik
+ca:
+  iso_name:  Catalan, Valencian
+  name:      català, valencià
+ce:
+  iso_name:  Chechen
+  name:      нохчийн мотт
+ch:
+  iso_name:  Chamorro
+  name:      Chamoru
+co:
+  iso_name:  Corsican
+  name:      corsu, lingua corsa
+cr:
+  iso_name:  Cree
+  name:      ᓀᐦᐃᔭᐍᐏᐣ
+cs:
+  iso_name:  Czech
+  name:      čeština, český jazyk
+cv:
+  iso_name:  Chuvash
+  name:      чӑваш чӗлхи
+cy:
+  iso_name:  Welsh
+  name:      Cymraeg
+da:
+  iso_name:  Danish
+  name:      dansk
+de:
+  iso_name:  German
+  name:      Deutsch
+dv:
+  iso_name:  Divehi, Dhivehi, Maldivian
+  name:      ދިވެހި
+  rtl:       true
+dz:
+  iso_name:  Dzongkha
+  name:      རྫོང་ཁ
+ee:
+  iso_name:  Ewe
+  name:      Eʋegbe
+el:
+  iso_name:  Greek, Modern (1453-)
+  name:      ελληνικά
+en:
+  iso_name:  English
+  name:      English
+eo:
+  iso_name:  Esperanto
+  name:      Esperanto
+es:
+  iso_name:  Spanish, Castilian
+  name:      Español
+et:
+  iso_name:  Estonian
+  name:      eesti, eesti keel
+eu:
+  iso_name:  Basque
+  name:      euskara, euskera
+fa:
+  iso_name:  Persian
+  name:      فارسی
+  rtl:       true
+ff:
+  iso_name:  Fulah
+  name:      Fulfulde, Pulaar, Pular
+fi:
+  iso_name:  Finnish
+  name:      suomi, suomen kieli
+fj:
+  iso_name:  Fijian
+  name:      vosa Vakaviti
+fo:
+  iso_name:  Faroese
+  name:      føroyskt
+fr:
+  iso_name:  French
+  name:      français
+fy:
+  iso_name:  Western Frisian
+  name:      Frysk
+ga:
+  iso_name:  Irish
+  name:      Gaeilge
+gd:
+  iso_name:  Gaelic, Scottish Gaelic
+  name:      Gàidhlig
+gl:
+  iso_name:  Galician
+  name:      Galego
+gn:
+  iso_name:  Guarani
+  name:      Avañe'ẽ
+gu:
+  iso_name:  Gujarati
+  name:      ગુજરાતી
+gv:
+  iso_name:  Manx
+  name:      Gaelg, Gailck
+ha:
+  iso_name:  Hausa
+  name:      (Hausa) هَوُسَ
+he:
+  iso_name:  Hebrew
+  name:      עברית
+  rtl:       true
+hi:
+  iso_name:  Hindi
+  name:      हिन्दी, हिंदी
+ho:
+  iso_name:  Hiri Motu
+  name:      Hiri Motu
+hr:
+  iso_name:  Croatian
+  name:      hrvatski jezik
+ht:
+  iso_name:  Haitian, Haitian Creole
+  name:      Kreyòl ayisyen
+hu:
+  iso_name:  Hungarian
+  name:      magyar
+hy:
+  iso_name:  Armenian
+  name:      Հայերեն
+hz:
+  iso_name:  Herero
+  name:      Otjiherero
+ia:
+  iso_name:  Interlingua (International Auxiliary Language Association)  
+  name:      Interlingua
+id:
+  iso_name:  Indonesian
+  name:      Bahasa Indonesia
+ie:
+  iso_name:  Interlingue, Occidental
+  name:      Interlingue
+ig:
+  iso_name:  Igbo
+  name:      Asụsụ Igbo
+ii:
+  iso_name:  Sichuan Yi, Nuosu
+  name:      ꆈꌠ꒿ Nuosuhxop
+ik:
+  iso_name:  Inupiaq
+  name:      Iñupiaq, Iñupiatun
+io:
+  iso_name:  Ido
+  name:      Ido
+is:
+  iso_name:  Icelandic
+  name:      Íslenska
+it:
+  iso_name:  Italian
+  name:      Italiano
+iu:
+  iso_name:  Inuktitut
+  name:      ᐃᓄᒃᑎᑐᑦ
+ja:
+  iso_name:  Japanese
+  name:      日本語 (にほんご)
+jv:
+  iso_name:  Javanese
+  name:      ꦧꦱꦗꦮ, Basa Jawa
+ka:
+  iso_name:  Georgian
+  name:      ქართული
+kg:
+  iso_name:  Kongo
+  name:      Kikongo
+ki:
+  iso_name:  Kikuyu, Gikuyu
+  name:      Gĩkũyũ
+kj:
+  iso_name:  Kuanyama, Kwanyama
+  name:      Kuanyama
+kk:
+  iso_name:  Kazakh
+  name:      қазақ тілі
+kl:
+  iso_name:  Kalaallisut, Greenlandic
+  name:      kalaallisut, kalaallit oqaasii
+km:
+  iso_name:  Central Khmer
+  name:      ខ្មែរ, ខេមរភាសា, ភាសាខ្មែរ
+kn:
+  iso_name:  Kannada
+  name:      ಕನ್ನಡ
+ko:
+  iso_name:  Korean
+  name:      한국어
+kr:
+  iso_name:  Kanuri
+  name:      Kanuri
+ks:
+  iso_name:  Kashmiri
+  name:      कश्मीरी, كشميري‎
+ku:
+  iso_name:  Kurdish
+  name:      Kurdî, کوردی‎
+  rtl:       true
+kv:
+  iso_name:  Komi
+  name:      коми кыв
+kw:
+  iso_name:  Cornish
+  name:      Kernewek
+ky:
+  iso_name:  Kirghiz, Kyrgyz
+  name:      Кыргызча, Кыргыз тили
+lb:
+  iso_name:  Luxembourgish, Letzeburgesch
+  name:      Lëtzebuergesch
+lg:
+  iso_name:  Ganda
+  name:      Luganda
+li:
+  iso_name:  Limburgan, Limburger, Limburgish
+  name:      Limburgs
+ln:
+  iso_name:  Lingala
+  name:      Lingála
+lo:
+  iso_name:  Lao
+  name:      ພາສາລາວ
+lt:
+  iso_name:  Lithuanian
+  name:      lietuvių kalba
+lu:
+  iso_name:  Luba-Katanga
+  name:      Kiluba
+lv:
+  iso_name:  Latvian
+  name:      latviešu valoda
+mg:
+  iso_name:  Malagasy
+  name:      fiteny malagasy
+mh:
+  iso_name:  Marshallese
+  name:      Kajin M̧ajeļ
+mi:
+  iso_name:  Maori
+  name:      te reo Māori
+mk:
+  iso_name:  Macedonian
+  name:      македонски јазик
+ml:
+  iso_name:  Malayalam
+  name:      മലയാളം
+mn:
+  iso_name:  Mongolian
+  name:      Монгол хэл
+mr:
+  iso_name:  Marathi
+  name:      मराठी
+ms:
+  iso_name:  Malay
+  name:      Bahasa Melayu, بهاس ملايو‎
+mt:
+  iso_name:  Maltese
+  name:      Malti
+my:
+  iso_name:  Burmese
+  name:      ဗမာစာ
+na:
+  iso_name:  Nauru
+  name:      Dorerin Naoero
+nb:
+  iso_name:  Norwegian Bokmål
+  name:      Norsk Bokmål
+nd:
+  iso_name:  North Ndebele
+  name:      isiNdebele
+ne:
+  iso_name:  Nepali
+  name:      नेपाली
+ng:
+  iso_name:  Ndonga
+  name:      Owambo
+nl:
+  iso_name:  Dutch, Flemish
+  name:      Nederlands, Vlaams
+nn:
+  iso_name:  Norwegian Nynorsk
+  name:      Norsk Nynorsk
+'no':
+  iso_name:  Norwegian
+  name:      Norsk
+nr:
+  iso_name:  South Ndebele
+  name:      isiNdebele
+nv:
+  iso_name:  Navajo, Navaho
+  name:      Diné bizaad
+ny:
+  iso_name:  Chichewa, Chewa, Nyanja
+  name:      chiCheŵa, chinyanja
+oc:
+  iso_name:  Occitan
+  name:      occitan, lenga d'òc
+oj:
+  iso_name:  Ojibwa
+  name:      ᐊᓂᔑᓈᐯᒧᐎᓐ
+om:
+  iso_name:  Oromo
+  name:      Afaan Oromoo
+or:
+  iso_name:  Oriya
+  name:      ଓଡ଼ିଆ
+os:
+  iso_name:  Ossetian, Ossetic
+  name:      ирон æвзаг
+pa:
+  iso_name:  Punjabi, Panjabi
+  name:      ਪੰਜਾਬੀ, پنجابی‎
+pl:
+  iso_name:  Polish
+  name:      język polski, polszczyzna
+ps:
+  iso_name:  Pashto, Pushto
+  name:      پښتو
+  rtl:       true
+pt:
+  iso_name:  Portuguese
+  name:      Português
+qu:
+  iso_name:  Quechua
+  name:      Runa Simi, Kichwa
+rm:
+  iso_name:  Romansh
+  name:      Rumantsch Grischun
+rn:
+  iso_name:  Rundi
+  name:      Ikirundi
+ro:
+  iso_name:  Romanian, Moldavian, Moldovan
+  name:      Română
+ru:
+  iso_name:  Russian
+  name:      русский
+rw:
+  iso_name:  Kinyarwanda
+  name:      Ikinyarwanda
+sa:
+  iso_name:  Sanskrit
+  name:      संस्कृतम्
+sc:
+  iso_name:  Sardinian
+  name:      sardu
+sd:
+  iso_name:  Sindhi
+  name:      सिन्धी, سنڌي، سندھی‎
+se:
+  iso_name:  Northern Sami
+  name:      Davvisámegiella
+sg:
+  iso_name:  Sango
+  name:      yângâ tî sängö
+si:
+  iso_name:  Sinhala, Sinhalese
+  name:      සිංහල
+sk:
+  iso_name:  Slovak
+  name:      Slovenčina, Slovenský Jazyk
+sl:
+  iso_name:  Slovenian
+  name:      Slovenski Jezik, Slovenščina
+sm:
+  iso_name:  Samoan
+  name:      gagana fa'a Samoa
+sn:
+  iso_name:  Shona
+  name:      chiShona
+so:
+  iso_name:  Somali
+  name:      Soomaaliga, af Soomaali
+sq:
+  iso_name:  Albanian
+  name:      Shqip
+sr:
+  iso_name:  Serbian
+  name:      српски језик
+ss:
+  iso_name:  Swati
+  name:      SiSwati
+st:
+  iso_name:  Southern Sotho
+  name:      Sesotho
+su:
+  iso_name:  Sundanese
+  name:      Basa Sunda
+sv:
+  iso_name:  Swedish
+  name:      Svenska
+sw:
+  iso_name:  Swahili
+  name:      Kiswahili
+ta:
+  iso_name:  Tamil
+  name:      தமிழ்
+te:
+  iso_name:  Telugu
+  name:      తెలుగు
+tg:
+  iso_name:  Tajik
+  name:      тоҷикӣ, toçikī, تاجیکی‎
+th:
+  iso_name:  Thai
+  name:      ไทย
+ti:
+  iso_name:  Tigrinya
+  name:      ትግርኛ
+tk:
+  iso_name:  Turkmen
+  name:      Türkmen, Түркмен
+tl:
+  iso_name:  Tagalog
+  name:      Wikang Tagalog
+tn:
+  iso_name:  Tswana
+  name:      Setswana
+to:
+  iso_name:  Tonga (Tonga Islands)
+  name:      Faka Tonga
+tr:
+  iso_name:  Turkish
+  name:      Türkçe
+ts:
+  iso_name:  Tsonga
+  name:      Xitsonga
+tt:
+  iso_name:  Tatar
+  name:      татар теле, tatar tele
+tw:
+  iso_name:  Twi
+  name:      Twi
+ty:
+  iso_name:  Tahitian
+  name:      Reo Tahiti
+ug:
+  iso_name:  Uighur, Uyghur
+  name:      ئۇيغۇرچە‎, Uyghurche
+  rtl:       true
+uk:
+  iso_name:  Ukrainian
+  name:      Українська
+ur:
+  iso_name:  Urdu
+  name:      اردو
+  rtl:       true
+uz:
+  iso_name:  Uzbek
+  name:      Oʻzbek, Ўзбек, أۇزبېك‎
+ve:
+  iso_name:  Venda
+  name:      Tshivenḓa
+vi:
+  iso_name:  Vietnamese
+  name:      Tiếng Việt
+vo:
+  iso_name:  Volapük
+  name:      Volapük
+wa:
+  iso_name:  Walloon
+  name:      Walon
+wo:
+  iso_name:  Wolof
+  name:      Wollof
+xh:
+  iso_name:  Xhosa
+  name:      isiXhosa
+yi:
+  iso_name:  Yiddish
+  name:      ייִדיש
+  rtl:       true
+yo:
+  iso_name:  Yoruba
+  name:      Yorùbá
+za:
+  iso_name:  Zhuang, Chuang
+  name:      Saɯ cueŋƅ, Saw cuengh
+zh:
+  iso_name:  Chinese
+  name:      中文 (Zhōngwén), 汉语, 漢語
+zu:
+  iso_name:  Zulu
+  name:      isiZulu

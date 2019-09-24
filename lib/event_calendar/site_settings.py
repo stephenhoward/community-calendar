@@ -2,8 +2,8 @@ import yaml
 
 from event_calendar.config import Singleton
 
-codes = yaml.load( open('config/language_codes.yaml','r'), Loader=yaml.FullLoader )
-languages = codes['LanguageCode']['enum'];
+languages = yaml.load( open('config/languages.yaml','r'), Loader=yaml.FullLoader )
+codes = list(languages.keys())
 
 class LanguageException(Exception):
 
@@ -48,7 +48,7 @@ class SiteSettings(metaclass=Singleton):
 
     @default_language.setter
     def default_language(self,lang):
-        if lang in languages:
+        if lang in codes:
             self._settings['default_language'] = lang
         else:
             raise LanguageException( lang )
@@ -59,7 +59,7 @@ class SiteSettings(metaclass=Singleton):
 
     @languages.setter
     def languages(self,langs):
-        bad_langs = [ lang for lang in langs if lang not in languages ]
+        bad_langs = [ lang for lang in langs if lang not in codes ]
         if len(bad_langs):
             raise LanguageException( ', '.join(bad_langs) )
         else:
@@ -82,7 +82,7 @@ class SiteSettings(metaclass=Singleton):
 
     def info(self,lang):
         if lang:
-            if lang in languages:
+            if lang in codes:
                 return self._settings['info'][lang] or {}
             else:
                 raise LanguageException(lang)
@@ -91,7 +91,7 @@ class SiteSettings(metaclass=Singleton):
 
     def set_info(self,lang,info):
         if lang:
-            if lang in languages:
+            if lang in codes:
                 self._validate_info(dict(zip([lang],[info])))
                 self._settings['info'][lang] = info
             else:
@@ -102,7 +102,7 @@ class SiteSettings(metaclass=Singleton):
 
     def _validate_info(self,info):
         for lang,data in info.items():
-            if lang not in languages:
+            if lang not in codes:
                 raise LanguageException(lang)
             if not isinstance(data,dict):
                 raise Exception('Site info must be a dict')
