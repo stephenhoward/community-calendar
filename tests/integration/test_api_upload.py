@@ -26,7 +26,7 @@ class TestApiUpload(unittest.TestCase):
                 data         = data,
                 content_type = 'multipart/form-data'
             )
-            assert(res.status_code == 200 )
+            assert(res.status_code == 401 )
             assert(res.is_json)
             assert( 'filename' in res.get_json() )
 

@@ -9,7 +9,7 @@ COPY requirements.txt ${HOME}/requirements.txt
 WORKDIR ${HOME}/
 
 # prereqs for psycopg2
-RUN apk --update add gcc musl-dev postgresql-dev
+RUN apk --update add gcc musl-dev python3-dev libffi-dev openssl-dev postgresql-dev
 
 RUN pip install -r requirements.txt
 

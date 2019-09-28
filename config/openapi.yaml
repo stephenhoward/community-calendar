@@ -9,7 +9,16 @@ info:
 servers:
   - url: https://dev.community-events.com/v1
     description: Development server
+security:
+  - JWT: []
+
 components:
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: app.auth.decode_token
   parameters:
     startParam:
       name: from
@@ -204,6 +213,7 @@ components:
 paths:
   /site:
     get:
+      security: []
       responses:
         '200':
           description: Ok
@@ -239,6 +249,7 @@ paths:
           description: Ok
   /site/languages:
     get:
+      security: []
       operationId: app.site.get_languages
       responses:
         '200':
@@ -250,6 +261,7 @@ paths:
 
   /events:
     get:
+      security: []
       parameters:
         - $ref: '#/components/parameters/categoryParam'
         - $ref: '#/components/parameters/startParam'
@@ -287,6 +299,7 @@ paths:
           type: string
           format: uuid
     get:
+      security: []
       responses:
         '200':
           description: Ok
@@ -346,6 +359,7 @@ paths:
                 format: binary
   /categories:
     get:
+      security: []
       parameters:
         - in: query
           name: category
@@ -374,6 +388,7 @@ paths:
           type: string
           format: uuid
     get:
+      security: []
       responses:
         '200':
           $ref: '#/components/responses/Ok'
@@ -388,3 +403,43 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/Ok'
+  /auth/token:
+    post:
+      description: submit user credentials to receive a JSON web token
+      operationId: app.auth.get_token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: A JWT
+          content:
+            'text/plain':
+              schema:
+                type: string
+        '401':
+          description: Failed Login
+    get:
+      description: submit about-to-expire JSON web token to receive a replacement
+      operationId: app.auth.refresh_token
+      responses:
+        '200':
+          description: A JWT
+          content:
+            'text/plain':
+              schema:
+                type: string
+        '401':
+          description: Cannot refresh with provided token
+
