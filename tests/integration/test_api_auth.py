@@ -3,7 +3,8 @@ from event_calendar.model.user import User
 from app import create_app
 from sqlalchemy.orm import Query
 from uuid import UUID, uuid4 as uuid
-from event_calendar.database import DB, Base
+from event_calendar.database import DB
+from event_calendar.testing.test_client import TestClient
 import unittest
 
 db = DB()
@@ -21,7 +22,9 @@ class TestAPI(unittest.TestCase):
         db.build_engine()
         db.create_db()
 
-        self.client = create_app().test_client()
+        app = create_app();
+        app.test_client_class = TestClient
+        self.client = app.test_client()
 
     def tearDown(self):
         db.destroy_db()
@@ -37,7 +40,7 @@ class TestAPI(unittest.TestCase):
     def test_post_goodlogin(self):
         user = User.create(test_user)
         user.save()
-        res  = self.client.post('/v1/auth/token', json = test_user )
+        res  = self.client.login()
         assert(res.status_code == 200 )
         assert(res.mimetype == 'text/plain' )
         assert(len(res.data) > 0 )
