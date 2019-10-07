@@ -3,6 +3,7 @@ from flask.json import JSONEncoder
 from connexion.resolver import RestyResolver
 from event_calendar.database import DB
 from event_calendar.config   import config
+import enum
 import connexion
 
 class ExtendedJSONEncoder(JSONEncoder):
@@ -10,6 +11,8 @@ class ExtendedJSONEncoder(JSONEncoder):
     def default(self,obj):
         if hasattr(obj,'dump') and callable( getattr(obj,'dump') ):
             return obj.dump()
+        elif isinstance(obj,enum.Enum):
+            return obj.name
         else:
             return JSONEncoder.default(self,obj)
 

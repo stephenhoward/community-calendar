@@ -1,15 +1,22 @@
 from flask import jsonify, request, g, abort, make_response, current_app as app
 from werkzeug.exceptions import Unauthorized
 from event_calendar.model.user import User
+from event_calendar.site_settings import site_settings
 import jwt
 import time
+import pprint
 
-JWT_ISSUER = 'com.zalando.connexion'
+JWT_ISSUER           = 'com.events-calendar.api'
 JWT_LIFETIME_SECONDS = 600
 
 def get_token():
 
-    user = User.search( email = request.json['email'].lower() ).first()
+    email = request.json['email'].lower()
+
+    if site_settings.needs_setup:
+        return _generate_token( User(email = email) )
+
+    user = User.search( email = email ).first()
 
     if user:
         if user.check_password( request.json['password'] ):
@@ -43,6 +50,9 @@ def _generate_token(user):
         "exp":   int(timestamp + JWT_LIFETIME_SECONDS),
         "id":    str(user.id),
     }
+
+    if site_settings.needs_setup == 1:
+        claims['setup_only'] = 1
 
     return jwt.encode(claims, app.config['JWT_PRIVATE_KEY'], algorithm='RS256').decode('ascii')
 

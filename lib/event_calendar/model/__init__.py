@@ -80,16 +80,29 @@ class Model(object):
                     else:
                         setattr( self, key, other_cls.create(value) )
             else:
-                setattr( self, key, value )
+                self.update_attr( key, value )
 
         return self
+
+    def update_attr(self,attr,value):
+        setattr( self, attr, value )
 
     def save(self):
         db.session.commit()
         return self
 
+    def _dont_dump(self):
+        return [];
+
     def dump(self):
-        return { c.name: getattr(self,c.name) for c in self.__table__.columns }
+        dumped  = {}
+        no_dump = self._dont_dump()
+
+        for c in self.__table__.columns:
+            if c.name not in no_dump:
+                dumped[c.name] = getattr(self,c.name)
+
+        return dumped
 
 class TranslatableModel(Model):
 

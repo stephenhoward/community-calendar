@@ -209,7 +209,21 @@ components:
               - type: string
                 format: uuid
               - $ref: '#/components/schemas/Event'
-
+    User:
+      properties:
+        language:
+          $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
+        email:
+          type: string
+          format: email
+        roles:
+          type: array
+          items:
+            type: string
+            enum:
+              - Administrator
+              - Editor
+              - Contributor
 paths:
   /site:
     get:
@@ -368,7 +382,13 @@ paths:
             format: uuid
       responses:
         '200':
-          $ref: '#/components/responses/Ok'
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
     post:
       requestBody:
         required: true
@@ -391,7 +411,11 @@ paths:
       security: []
       responses:
         '200':
-          $ref: '#/components/responses/Ok'
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
     post:
       operationId: app.categories.update
       requestBody:
@@ -400,6 +424,54 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Category'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+  /users:
+    get:
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    post:
+      operationId: app.users.update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
       responses:
         '200':
           $ref: '#/components/responses/Ok'

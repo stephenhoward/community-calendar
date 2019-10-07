@@ -9,20 +9,35 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 from event_calendar.model import Model, Translation
 from event_calendar.database import Base
+import yaml
 
 UserRole = enum.Enum( 'UserRole', [
     'Contributor',
     'Editor',
     'Administrator'
 ])
+codes = yaml.load( open('config/languages.yaml','r'), Loader=yaml.FullLoader )
+
+LanguageCode  = enum.Enum( 'LanguageCode', list(codes.keys()) )
 
 class User(Model,Base):
     __tablename__ = 'users'
 
     role     = Column( Enum(UserRole) )
-    email    = Column( String )
+    email    = Column( String, unique=True )
+    language = Column( Enum(LanguageCode), default='en' )
+    name     = Column( String )
     salt     = Column( Binary )
     password = Column( Binary )
+
+    def _dont_dump(self):
+        return ['salt','password'];
+
+    def update_attr(self,attr,value):
+        if attr not in self._dont_dump():
+            setattr( self, attr, value )
+        elif attr == 'password':
+            self.set_password(value)
 
     def __init__(self,**kwargs):
 

@@ -1,6 +1,7 @@
 import yaml
 
 from event_calendar.config import Singleton
+from event_calendar.model.user import User
 
 languages = yaml.load( open('config/languages.yaml','r'), Loader=yaml.FullLoader )
 codes = list(languages.keys())
@@ -25,7 +26,15 @@ class SiteSettings(metaclass=Singleton):
                 self.save()
 
     def dump(self):
-        return self._settings
+        s     = self._settings
+        setup = self.needs_setup
+
+        if setup:
+            s['needs_setup'] = 1
+        else:
+            s.pop('needs_setup',None)
+
+        return s
 
     def update_values(self,**kwargs):
 
@@ -79,6 +88,19 @@ class SiteSettings(metaclass=Singleton):
             self._settings['splash_image'] = None
         else:
             self._settings['splash_image'] = SiteImage.filename
+
+    @property
+    def needs_setup(self):
+        user_count = User.search().count()
+        if user_count > 0:
+            return None
+
+        return 1
+
+    @needs_setup.setter
+    def needs_setup(self,value):
+        # no-op
+        return None
 
     def info(self,lang):
         if lang:
