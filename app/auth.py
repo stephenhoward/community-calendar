@@ -22,7 +22,7 @@ def get_token():
         if user.check_password( request.json['password'] ):
             return _generate_token(user)
 
-    abort( make_response( 'Unknown user or password',401 ) )
+    abort( make_response( 'UnknownLogin',401 ) )
 
 def refresh_token():
 
@@ -39,7 +39,7 @@ def decode_token(token):
         g.user   = User.get( g.claims['id'] )
         return g.claims
     except jwt.exceptions.InvalidTokenError as e:
-        abort( make_response('Invalid Token', 401) )
+        abort( make_response('InvalidToken', 401) )
 
 def _generate_token(user):
 
