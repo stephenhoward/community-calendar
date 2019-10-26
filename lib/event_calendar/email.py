@@ -40,7 +40,7 @@ class EmailSender:
             (subject,message) = templates \
                 .get_template(kwargs['template']) \
                 .render( **kwargs['args'] ) \
-                .partition("\n--\n")
+                .split("\n----\n")
 
             kwargs['subject'] = subject
             kwargs['message'] = message

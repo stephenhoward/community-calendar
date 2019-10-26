@@ -62,14 +62,10 @@ class TestModel(unittest.TestCase):
         model   = ParentModel.create({ 'name': 'Bar' }).save()
         model2  = ParentModel.create({ 'name': 'Baz' }).save()
 
-        models  = ParentModel.search(**{
-            'name': 'Gone'
-        })
+        models  = ParentModel.search( ParentModel.name == 'Gone' )
         assert( len(models.all()) == 0 )
 
-        models  = ParentModel.search(**{
-            'name': 'Bar'
-        })
+        models  = ParentModel.search( ParentModel.name == 'Bar' )
         assert( len(models.all()) == 1 )
 
 
