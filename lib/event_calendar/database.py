@@ -23,12 +23,14 @@ class DB(object, metaclass=Singleton):
 
         except OperationalError:
             import event_calendar.model.user
-            import event_calendar.model.image
-            import event_calendar.model.link
-            import event_calendar.model.location
+            import event_calendar.model.password_token
             import event_calendar.model.event
             import event_calendar.model.series
             import event_calendar.model.category
+            import event_calendar.model.image
+            import event_calendar.model.link
+            import event_calendar.model.location
+            import event_calendar.model.comment
 
             self._db_exec('create database ' + config.get('db')['database'])
             Base.metadata.create_all(bind=self.engine)

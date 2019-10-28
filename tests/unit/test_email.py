@@ -5,7 +5,6 @@ from email.message import EmailMessage
 from event_calendar.templates import templates
 from jinja2 import Template
 import smtplib
-import pprint
 
 class TestEmail(unittest.TestCase):
 
@@ -18,7 +17,7 @@ class TestEmail(unittest.TestCase):
             'from':    "sender@example.com"        
         }
 
-        with patch("smtplib.SMTP") as mock_smtp:
+        with patch("smtplib.SMTP_SSL") as mock_smtp:
             sender = EmailSender()
 
             sender.send_email( **kwargs )
@@ -39,10 +38,11 @@ class TestEmail(unittest.TestCase):
             'template': "Subject Line\n----\nMessage Body",
             'to':       "recipient@example.com",
             'from':     "sender@example.com",
+            'lang':     'en',
             'args':     {}       
         }
 
-        with patch("smtplib.SMTP") as mock_smtp:
+        with patch("smtplib.SMTP_SSL") as mock_smtp:
             with patch.object(templates,"get_template", return_value = Template(kwargs['template']) ):
                 sender = EmailSender()
 

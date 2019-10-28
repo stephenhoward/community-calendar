@@ -15,18 +15,24 @@ class EmailSender:
             (user,password) = fh.read().decode('utf-8').split(':')
             self._user      = user
             self._password  = password
-            self._session   = smtplib.SMTP(config.get('email','server'))
+            print(config.get('email','server'))
+            self._session   = smtplib.SMTP_SSL(config.get('email','server'))
+            self._session.set_debuglevel(1)
 
     def _get_session(self):
 
-        self._session.starttls( context = default_context )
+        self._session.login(self._user, self._password)
 
         return self._session
 
     def send_email(self,**kwargs):
+
+            if 'from' not in kwargs:
+                kwargs['from'] = site_settings.from_email
+
             msg = EmailMessage()
             msg['Subject'] = kwargs['subject']
-            msg['From']    = kwargs['from'] or site_settings.from_email
+            msg['From']    = kwargs['from']
             msg['To']      = kwargs['to']
 
             msg.set_content(kwargs['message'])
@@ -38,7 +44,7 @@ class EmailSender:
     def send_template(self,**kwargs):
 
             (subject,message) = templates \
-                .get_template(kwargs['template']) \
+                .get_template(kwargs['template'], lang = kwargs['lang'] ) \
                 .render( **kwargs['args'] ) \
                 .split("\n----\n")
 

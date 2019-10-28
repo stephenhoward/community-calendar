@@ -514,4 +514,58 @@ paths:
                 type: string
         '401':
           description: Cannot refresh with provided token
+  /auth/reset:
+    post:
+      security: []
+      description: submit email to reset password
+      operationId: app.auth.create_password_token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: password reset sent
+  /auth/reset/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      security: []
+      description: verify password reset token is usable
+      operationId: app.auth.verify_password_token
+      responses:
+        '200':
+          description: token is valid
+    post:
+      security: []
+      description: change your password
+      operationId: app.auth.use_password_token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: password set
+
 

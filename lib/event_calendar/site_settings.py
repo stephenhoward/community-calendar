@@ -90,6 +90,17 @@ class SiteSettings(metaclass=Singleton):
             self._settings['splash_image'] = SiteImage.filename
 
     @property
+    def from_email(self):
+        if 'from_email' in self._settings:
+            return self._settings['from_email']
+        else:
+            return 'sender@example.com'
+
+    @from_email.setter
+    def from_email(self,email_address):
+        self._settings['from_email'] = email_address
+
+    @property
     def needs_setup(self):
         user_count = User.search().count()
         if user_count > 0:

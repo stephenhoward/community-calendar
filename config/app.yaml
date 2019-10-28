@@ -16,4 +16,4 @@ password_reset:
   expires: 600 #seconds
 
 email:
-  server: smtp.google.com #for development only
+  server: smtp.gmail.com #for development only

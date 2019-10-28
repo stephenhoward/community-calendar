@@ -27,27 +27,13 @@ class Model(object):
             self.id = uuid()
 
     @classmethod
-    def search(cls,**kwargs):
-        return cls._search( db.session.query(cls), **kwargs )
-
-    @classmethod
-    def _search(cls,query,**kwargs):
-
-        mapper = inspect(cls)
-
-        for key,value in kwargs.items():
-
-            if mapper.attrs[key]:
-                query = query.filter_by( **{ key:value } )
-
-        return query
+    def search(cls,*operators):
+        return cls.query.filter(*operators)
 
     @classmethod
     def get(cls,id):
         try:
-            return db.session.query( cls ). \
-                filter(cls.id == id). \
-                one()
+            return cls.query.get(id)
         except NoResultFound:
             return None
 
@@ -90,6 +76,10 @@ class Model(object):
     def save(self):
         db.session.commit()
         return self
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
     def _dont_dump(self):
         return [];

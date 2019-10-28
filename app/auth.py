@@ -1,13 +1,48 @@
 from flask import jsonify, request, g, abort, make_response, current_app as app
 from werkzeug.exceptions import Unauthorized
 from event_calendar.model.user import User
+from event_calendar.model.password_token import PasswordToken
 from event_calendar.site_settings import site_settings
 import jwt
 import time
-import pprint
+from event_calendar.config import config
 
 JWT_ISSUER           = 'com.events-calendar.api'
 JWT_LIFETIME_SECONDS = 600
+
+def create_password_token():
+
+    email = request.json['email'].lower()
+    user  = User.search( User.email == email ).first()
+
+    if user:
+        token = PasswordToken.generate(user)
+        token.send()
+
+    return 'Ok'
+
+def verify_password_token(id):
+
+    token = PasswordToken.retrieve(id)
+
+    if token:
+        return 'Ok'
+
+    abort( make_response( 'NoTokenFound', 404 ) )
+
+def use_password_token(id):
+
+    token = PasswordToken.retrieve(id)
+
+    if token:
+        user = token.user;
+
+        user.set_password(request.json['password'])
+        user.save()
+        token.delete()
+        return 'Ok'
+
+    abort( make_response( 'NoTokenFound', 404 ) )
 
 def get_token():
 
@@ -16,7 +51,7 @@ def get_token():
     if site_settings.needs_setup:
         return _generate_token( User(email = email) )
 
-    user = User.search( email = email ).first()
+    user = User.search( User.email == email ).first()
 
     if user:
         if user.check_password( request.json['password'] ):
