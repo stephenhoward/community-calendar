@@ -99,10 +99,7 @@ class TranslatableModel(Model):
     def dump(self):
         d = super().dump()
 
-        if 'info' in inspect(type(self)).relationships.items():
-            d[info] = {}
-            for info in self.info:
-                d['info'][info.language] = info.dump()
+        d['info'] = list(map( lambda x: x.dump(), self.info ))
 
         return d
 
