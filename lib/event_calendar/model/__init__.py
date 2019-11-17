@@ -7,6 +7,7 @@ from sqlalchemy.orm.exc import NoResultFound
 import enum
 import yaml
 from uuid import UUID, uuid4 as uuid
+from datetime import datetime
 
 db    = DB()
 codes = yaml.load( open('config/languages.yaml','r'), Loader=yaml.FullLoader )
@@ -91,6 +92,8 @@ class Model(object):
         for c in self.__table__.columns:
             if c.name not in no_dump:
                 dumped[c.name] = getattr(self,c.name)
+                if isinstance(dumped[c.name],datetime):
+                    dumped[c.name] = dumped[c.name].strftime('%Y-%m-%d %H:%M')
 
         return dumped
 
