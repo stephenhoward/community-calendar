@@ -4,7 +4,6 @@ from unittest.mock import patch
 from sqlalchemy.orm import Query
 from uuid import UUID, uuid4 as uuid
 from event_calendar.database import DB, Base
-import pprint
 import unittest
 
 db = DB()
@@ -18,7 +17,7 @@ class TestAPI(unittest.TestCase):
 
     def test_password(self):
         user = User.create(test_user)
-        assert( print(user.password) != test_user['password'] )
+        assert( user.password != test_user['password'] )
         assert( not user.check_password( 'wrong_password' ) )
         assert( user.check_password( test_user['password'] ) )
 

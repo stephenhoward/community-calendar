@@ -15,7 +15,6 @@ class EmailSender:
             (user,password) = fh.read().decode('utf-8').split(':')
             self._user      = user
             self._password  = password
-            print(config.get('email','server'))
             self._session   = smtplib.SMTP_SSL(config.get('email','server'))
             self._session.set_debuglevel(1)
 

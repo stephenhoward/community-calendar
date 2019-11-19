@@ -24,7 +24,7 @@ class PasswordToken(Model,Base):
         ).first()
 
         if existing_token is not None:
-            return existing_token
+            return cls(**existing_token)
         else:
             t = cls.create({
                 'user_id': user.id,

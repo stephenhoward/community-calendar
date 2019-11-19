@@ -39,7 +39,6 @@ class SiteSettings(metaclass=Singleton):
     def update_values(self,**kwargs):
 
         for setting in kwargs:
-            print(setting)
 
             if setting == 'info':
                 for lang in kwargs['info']:

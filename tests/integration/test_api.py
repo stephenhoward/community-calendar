@@ -27,7 +27,6 @@ class TestAPI(unittest.TestCase):
 
     def test_event_get(self):
         id = uuid()
-        print('/v1/events/' + str(id) )
         with patch.object( Query, 'one', return_value = { 'id': id } ):
             res = self.client.get('/v1/events/' + str(id) )
             assert(res.status_code == 200 )
