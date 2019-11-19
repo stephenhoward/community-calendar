@@ -52,21 +52,7 @@ class Model(object):
 
             attr = mapper.attrs[key]
 
-            if ( isinstance( attr, RelationshipProperty ) ):
-
-                other_cls = attr.mapper.class_
-
-                if ( attr.uselist ):
-                    setattr( self, key, list(map(
-                        lambda v: v if isinstance(v,other_cls) else other_cls.create(v),
-                        value
-                    )) )
-                else:
-                    if ( isinstance( value, other_cls ) ):
-                        setattr( self, key, value )
-                    else:
-                        setattr( self, key, other_cls.create(value) )
-            else:
+            if ( not isinstance( attr, RelationshipProperty ) ):
                 self.update_attr( key, value )
 
         return self
@@ -106,5 +92,31 @@ class TranslatableModel(Model):
 
         return d
 
+    def update(self,dict):
+
+        super().update(dict)
+
+        if ( 'info' in dict ):
+
+            info      = self.info
+            mapper    = inspect(type(self))
+            other_cls = mapper.attrs['info'].mapper.class_
+
+            for v in dict['info']:
+                for i in info:
+                    if i.language.name == v['language']:
+                        i.update(v)
+                        break
+                else:
+                    info.append( other_cls.create(v) )
+
+            setattr( self, 'info', info )
+
+        return self
+
 class Translation(Model):
     language = Column( Enum(LanguageCode), primary_key=True )
+
+    def _dont_dump(self):
+        return ['id'];
+
