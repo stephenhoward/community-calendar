@@ -61,24 +61,6 @@ class TestModel(unittest.TestCase):
         assert( model.id == id2 )
         assert( ret == model )
 
-    def test_complex_create_with_dict(self):
-        model = ParentModel.create({
-            "name": "FOO",
-            "children":[
-                { "name": "BAR" },
-                { "name": "BAZ" }
-            ]
-        })
-
-    def test_complex_create_with_mixed(self):
-        model = ParentModel.create({
-            "name": "FOO",
-            "children":[
-                ChildModel.create({ "name": "BAR" }),
-                { "name": "BAZ" }
-            ]
-        })
-
     def test_save(self):
         id = uuid()
         with patch.object( db.session, 'commit', return_value = True ):
