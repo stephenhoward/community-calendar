@@ -6,6 +6,7 @@ from event_calendar.database import DB
 from sqlalchemy.orm.exc import NoResultFound
 import enum
 import yaml
+from event_calendar.query_builder import from_query_string
 from uuid import UUID, uuid4 as uuid
 from datetime import datetime
 
@@ -28,8 +29,8 @@ class Model(object):
             self.id = uuid()
 
     @classmethod
-    def search(cls,*operators):
-        return cls.query.filter(*operators)
+    def search(cls,**parameters):
+        return cls.query.filter( *from_query_string( cls, **parameters ) )
 
     @classmethod
     def get(cls,id):

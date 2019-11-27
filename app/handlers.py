@@ -1,4 +1,4 @@
-from flask import jsonify, request, abort, send_from_directory
+from flask import jsonify, g, request, abort, send_from_directory
 from event_calendar.config import config
 from werkzeug.utils import secure_filename
 import os
@@ -6,7 +6,9 @@ from uuid import uuid4 as uuid
 
 def search_for(cls):
     def search():
-        q = cls.search(**request.args)
+        args = g.search_args or request.args
+        q    = cls.search( **args )
+
         return jsonify( q.all() )
     return search
 
