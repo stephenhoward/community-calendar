@@ -1,7 +1,7 @@
 from flask import g, request
 from event_calendar.model.event import Event
 from event_calendar.model.image import EventImage
-from datetime import datetime
+from datetime import datetime, timedelta
 import app.handlers as handlers
 
 get     = handlers.get_for(Event)
@@ -12,7 +12,7 @@ _search = handlers.search_for(Event)
 
 search_parameters = {
     'from':       ( lambda value: ( 'start[ge]', datetime.strptime(value, "%Y-%m-%d") ) ),
-    'to':         ( lambda value: ( 'end[le]',   datetime.strptime(value, "%Y-%m-%d") ) ),
+    'to':         ( lambda value: ( 'start[le]', datetime.strptime(value, "%Y-%m-%d") + timedelta( hours=23, minutes=59, seconds=59 ) ) ),
     'categories': ( lambda value: ( ) )
 }
 
