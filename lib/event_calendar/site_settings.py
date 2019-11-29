@@ -42,7 +42,7 @@ class SiteSettings(metaclass=Singleton):
 
             if setting == 'info':
                 for lang in kwargs['info']:
-                    self.set_info( lang, kwargs['info'][lang] )
+                    self.set_info( lang['language'], lang )
             else:
                 setattr(self, setting, kwargs[setting])
 
@@ -141,7 +141,7 @@ class SiteSettings(metaclass=Singleton):
             for key,value in data.items():
                 if not isinstance( value, str ):
                     raise Exception( '"' + key + '" ('+ lang +'): translatable values must be strings')
-                if key not in ['site_title']:
+                if key not in ['language','site_title']:
                     raise Exception( '"' + key + '" is not a permitted translatable site setting')
 
 site_settings = SiteSettings()
