@@ -202,6 +202,66 @@ components:
               - type: string
                 format: uuid
               - $ref: '#/components/schemas/Category'
+    Series:
+      properties:
+        id:
+          type: string
+          format: uuid
+        contact_phone:
+          type: string
+        contact_url:
+          type: string
+          format: url
+        contact_email:
+          type: string
+          format: email
+        status:
+          type: string
+          enum:
+            - Draft
+            - Active
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        dates_only:
+          type: boolean
+        repeat_by:
+          type: string
+          enum:
+            - DayOfMonth
+            - WeekdayOfMonth
+        info:
+          type: array
+          items:
+            type: object
+            properties:
+              language:
+                $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
+              title:
+                type: string
+              description:
+                type: string
+              accessibility_information:
+                type: string
+        location:
+            oneOf:
+              - type: string
+                format: uuid
+              - $ref: '#/components/schemas/Location'
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+        categories:
+          type: array
+          items:
+            oneOf:
+              - type: string
+                format: uuid
+              - $ref: '#/components/schemas/Category'
         events:
           type: array
           items:
@@ -359,6 +419,96 @@ paths:
           description: Ok
     get:
       operationId: app.events.get_image
+      responses:
+        '200':
+          description: Ok
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+  /series:
+    get:
+      security: []
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Series'
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Series'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+
+  /series/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      security: []
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Series'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      operationId: app.series.update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Series'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+  /series/{id}/image:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: app.series.post_image
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Ok
+    get:
+      operationId: app.series.get_image
       responses:
         '200':
           description: Ok
