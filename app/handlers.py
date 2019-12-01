@@ -6,7 +6,11 @@ from uuid import uuid4 as uuid
 
 def search_for(cls):
     def search():
-        args = g.search_args or request.args
+        if hasattr(g,'search_args'):
+            args = g.search_args
+        else:
+            args = request.args
+
         q    = cls.search( **args )
 
         return jsonify( q.all() )
