@@ -6,7 +6,6 @@ from event_calendar.database import DB
 from sqlalchemy.orm.exc import NoResultFound
 import enum
 import yaml
-from event_calendar.query_builder import from_query_string
 from uuid import UUID, uuid4 as uuid
 from datetime import datetime
 
@@ -29,8 +28,8 @@ class Model(object):
             self.id = uuid()
 
     @classmethod
-    def search(cls,**parameters):
-        return cls.query.filter( *from_query_string( cls, **parameters ) )
+    def search(cls,*parameters):
+        return cls.query.filter( *parameters )
 
     @classmethod
     def get(cls,id):
@@ -47,16 +46,49 @@ class Model(object):
 
     def update(self,dict):
 
-        mapper = inspect(type(self))
+        mapper = inspect( type(self) )
 
         for key, value in dict.items():
 
             attr = mapper.attrs[key]
 
-            if ( not isinstance( attr, RelationshipProperty ) ):
+            if isinstance( attr, RelationshipProperty ):
+                if attr.uselist:
+                    self.update_to_many( key, value )
+                else: 
+                    self.update_to_one( key, value )
+            else:
                 self.update_attr( key, value )
 
         return self
+
+    def update_to_many(self,key,value):
+
+        attr      = getattr( self, key )
+        mapper    = inspect(type(self))
+        other_cls = mapper.attrs[key].mapper.class_
+
+        for v in value:
+            for member in attr:
+                if member == v:
+                    if type(v) is dict:
+                        member.update(v)
+                    break
+            else:
+                new_member = None
+
+                if isinstance(v, other_cls):
+                    new_member = v
+                if type(v) is str:
+                    new_member = other_cls.get(v)
+                    if new_member is None:
+                        raise Exception( 'no ' + type(other_cls) + ' exists with identifier "' + v + '"' )
+                elif type(v) is dict:
+                    new_member = other_cls.create(v)
+
+                attr.append( new_member )
+
+        setattr( self, key, attr )
 
     def update_attr(self,attr,value):
         setattr( self, attr, value )
@@ -72,6 +104,16 @@ class Model(object):
     def _dont_dump(self):
         return [];
 
+    def __eq__(self,other):
+        if isinstance( other, type(self) ):
+            return self.id == other.id
+        elif type(other) is dict:
+            return self.id == other['id']
+        elif type(other) is str:
+            return self.id == other
+        else:
+            return False
+
     def dump(self):
         dumped  = {}
         no_dump = self._dont_dump()
@@ -84,6 +126,9 @@ class Model(object):
 
         return dumped
 
+    def __hash__(self):
+        return hash(self.id)
+
 class TranslatableModel(Model):
 
     def dump(self):
@@ -93,30 +138,16 @@ class TranslatableModel(Model):
 
         return d
 
-    def update(self,dict):
-
-        super().update(dict)
-
-        if ( 'info' in dict ):
-
-            info      = self.info
-            mapper    = inspect(type(self))
-            other_cls = mapper.attrs['info'].mapper.class_
-
-            for v in dict['info']:
-                for i in info:
-                    if i.language.name == v['language']:
-                        i.update(v)
-                        break
-                else:
-                    info.append( other_cls.create(v) )
-
-            setattr( self, 'info', info )
-
-        return self
-
 class Translation(Model):
     language = Column( Enum(LanguageCode), primary_key=True )
+
+    def __eq__(self,other):
+        if isinstance( other, Translation ):
+            return self.language == other.language
+        elif type(other) is dict:
+            return self.language.name == other['language']
+        else:
+            return False
 
     def _dont_dump(self):
         return ['id'];

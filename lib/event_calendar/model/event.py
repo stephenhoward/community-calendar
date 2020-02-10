@@ -69,6 +69,13 @@ class Event(TranslatableModel,Base):
 
         return query
 
+    def dump(self):
+        d = super().dump()
+
+        d['categories'] = list(map( lambda x: x.dump(), self.categories ))
+
+        return d
+
 # for translatable parts of the event
 class EventInfo(Translation,Base):
     __tablename__ = 'events_i18n'

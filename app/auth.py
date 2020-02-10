@@ -13,7 +13,7 @@ JWT_LIFETIME_SECONDS = 600
 def create_password_token():
 
     email = request.json['email'].lower()
-    user  = User.search( email = email ).first()
+    user  = User.search( User.email == email ).first()
 
     if user:
         token = PasswordToken.generate(user)
@@ -51,7 +51,7 @@ def get_token():
     if site_settings.needs_setup:
         return _generate_token( User(email = email) )
 
-    user = User.search( email = email ).first()
+    user = User.search( User.email == email ).first()
 
     if user:
         if user.check_password( request.json['password'] ):
