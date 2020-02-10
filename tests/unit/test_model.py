@@ -17,30 +17,30 @@ class TestCodes(unittest.TestCase):
         assert( 'es' in event_calendar.model.LanguageCode.__members__ )
         assert( 'fr' in event_calendar.model.LanguageCode.__members__ )
 
-class ChildModel(Model,Base):
+class ChildMod(Model,Base):
 
-    __tablename__ = 'child_models'
+    __tablename__ = 'child_mods'
 
     name      = Column(String)
-    parent_id = Column( UUIDColumn(as_uuid=True), ForeignKey("parent_models.id") )
-    parent    = relationship("ParentModel")
+    parent_id = Column( UUIDColumn(as_uuid=True), ForeignKey("parent_mods.id") )
+    parent    = relationship("ParentMod")
 
-class ParentModel(Model,Base):
+class ParentMod(Model,Base):
 
-    __tablename__ = 'parent_models'
+    __tablename__ = 'parent_mods'
 
     name     = Column(String)
-    children = relationship( "ChildModel", back_populates="parent" )
+    children = relationship( "ChildMod", back_populates="parent" )
 
 class TestModel(unittest.TestCase):
 
     def test_create(self):
         id = uuid()
         with patch.object( db.session, 'add', return_value = True ):
-            model = ParentModel.create( { 'id': id } )
+            model = ParentMod.create( { 'id': id } )
             assert( isinstance(model,Model) )
             assert( model.id == id )
-            model_no_id = ParentModel.create( {} )
+            model_no_id = ParentMod.create( {} )
             assert( isinstance(model_no_id,Model) )
             assert( isinstance(model_no_id.id, UUID ) )
 
@@ -49,12 +49,12 @@ class TestModel(unittest.TestCase):
           'id': uuid(),
           'name': 'dumped'
         }
-        model = ParentModel.create(params)
+        model = ParentMod.create(params)
         self.assertDictEqual( params, model.dump() )
 
     def test_update(self):
         id = uuid()
-        model = ParentModel( id = id )
+        model = ParentMod( id = id )
         assert( model.id == id )
         id2 = uuid()
         ret = model.update({ 'id': id2 })
@@ -64,7 +64,7 @@ class TestModel(unittest.TestCase):
     def test_save(self):
         id = uuid()
         with patch.object( db.session, 'commit', return_value = True ):
-            model = ParentModel( id = id )
+            model = ParentMod( id = id )
             ret = model.save()
             assert( model.id == id )
             assert( ret == model )
