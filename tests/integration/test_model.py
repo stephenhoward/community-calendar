@@ -46,12 +46,12 @@ class TestModel(unittest.TestCase):
 
     def test_complex_round_trip(self):
         model = ParentModel.create({
-            "name": "FOO"
+            "name": "FOO",
+            "children": [
+                { "name": "BAR" },
+                ChildModel.create({ "name": "BAZ" })
+            ]
         })
-        model.children = [
-            ChildModel.create({ "name": "BAR" }),
-            ChildModel.create({ "name": "BAZ" })
-        ]
 
         ret = model.save()
         assert( ret == model )
