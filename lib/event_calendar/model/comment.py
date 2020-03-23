@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Table, String, Text, Enum, Boolean, DateTime, ForeignKey, tuple_
 from sqlalchemy.orm import relationship, backref
+from sqlalchemy.ext.declarative import declared_attr,declarative_base
 from sqlalchemy.dialects.postgresql import UUID
 import enum
 from event_calendar.model import Model
@@ -8,29 +9,40 @@ import event_calendar.model.user
 import event_calendar.model.event
 import event_calendar.model.series
 
-# for internal discussion of drafted content:
-class Comment(Model):
+TargetClasses = enum.Enum( 'TargetClass', [
+    'Event',
+    'Series',
+    'Location'
+])
 
-    id        = Column( UUID(as_uuid=True), primary_key=True )
+
+# for internal discussion of drafted content:
+class BaseComment(Model):
+
     when      = Column( DateTime )
     edited    = Column( Boolean )
-    author_id = Column( UUID(as_uuid=True), ForeignKey('users.id') )
     contents  = Column( Text )
 
-    author    = relationship( "User" )
+    @declared_attr
+    def author_id(cls):
+        return Column( UUID(as_uuid=True), ForeignKey('users.id') )
 
-class EventComment(Model,Base):
+    @declared_attr
+    def author(cls):
+        return relationship( "User" )
 
-    __tablename__ = 'event_comments'
-    event_id  = Column( UUID(as_uuid=True), ForeignKey('events.id') )
-    parent_id = Column( UUID(as_uuid=True), ForeignKey('event_comments.id') )
-    children  = relationship( "EventComment", backref=backref("parent", remote_side='EventComment.id')  )
-    event     = relationship( "Event", back_populates="comments" )
+class Comment(BaseComment,Base):
 
-class SeriesComment(Model,Base):
+    __tablename__ = 'content_comments'
 
-    __tablename__ = 'series_comments'
-    series_id = Column( UUID(as_uuid=True), ForeignKey('series.id') )
-    parent_id = Column( UUID(as_uuid=True), ForeignKey('series_comments.id') )
-    children  = relationship( "SeriesComment", backref=backref("parent", remote_side='SeriesComment.id')  )
-    series    = relationship( "Series", back_populates="comments" )
+    target_id = Column( UUID(as_uuid=True) )
+    target_class = Column( Enum(TargetClasses) )
+    target_anchor = Column( String )
+    resolved = Column( Boolean )
+    replies = relationship( "Reply", lazy='joined' )
+
+class Reply(BaseComment,Base):
+
+    __tablename__ = 'content_replies'
+
+    parent_id = Column( UUID(as_uuid=True), ForeignKey('content_comments.id') )

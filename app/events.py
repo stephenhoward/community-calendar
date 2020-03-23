@@ -33,3 +33,7 @@ def search():
 
 post_image = handlers.upload_file_for(EventImage)
 get_image  = handlers.serve_file_for(EventImage)
+
+add_comment    = handlers.post_comment_for(Event)
+get_comments   = handlers.get_comments_for(Event)
+update_comment = handlers.update_comment_for(Event)

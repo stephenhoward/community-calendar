@@ -89,3 +89,32 @@ def serve_file_for(cls):
         file = cls.get(kwargs[id])
         return send_from_directory(cls.path(),file.filename)
     return serve_file
+
+
+def get_comments_for(cls):
+    def get_comments(**kwargs):
+        model = cls.get(kwargs['id'])
+        return jsonify( model.comments )
+    return get_comments
+
+
+def post_comment_for(cls):
+    def post(**kwargs):
+        model   = cls.get(kwargs['id'])
+        comment = model.add_comment(request.json)
+        model.save()
+
+        return jsonify( comment )
+    return post
+
+def update_comment_for(cls):
+    def update(**kwargs):
+        model   = cls.get(kwargs['id'])
+        comment = model.get_comment(kwargs['comment_id'])
+
+        if ( comment ):
+            comment.update( request.json ).save()
+            return jsonify( comment )
+        else:
+            abort(404)
+    return update

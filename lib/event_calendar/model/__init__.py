@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Enum
 from sqlalchemy.inspection import inspect
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.orm.relationships import RelationshipProperty
 from sqlalchemy.dialects.postgresql import UUID as UUIDColumn
 from event_calendar.database import DB
@@ -152,3 +153,19 @@ class Translation(Model):
     def _dont_dump(self):
         return ['id'];
 
+class CommentableModel (Model):
+
+    def get_comments(self):
+        return Comment.search(
+            target_class == self.__class__.__name__,
+            target_id    == self.id
+        ).all()
+
+    def add_comment(self,json):
+        if ( json['parent_id'] ):
+            reply = Reply.create(json).save()
+            return reply
+        else:
+            comment = Comment.create(json).save()
+            self.comments.add(comment)
+            return comment

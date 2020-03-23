@@ -2,7 +2,7 @@ from sqlalchemy import Column, Table, String, Text, Enum, Boolean, DateTime, For
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.dialects.postgresql import UUID
 import enum
-from event_calendar.model import TranslatableModel, Translation, ContentStatus
+from event_calendar.model import TranslatableModel, CommentableModel, Translation, ContentStatus
 from event_calendar.database import Base
 import event_calendar.model.location
 import event_calendar.model.user
@@ -35,7 +35,7 @@ EventRepeatBy = enum.Enum( 'EventRepeatBy', [
     'WeekdayOfMonth' # First Tuesday of each month
 ])
 
-class Event(TranslatableModel,Base):
+class Event(CommentableModel,TranslatableModel,Base):
     __tablename__ = 'events'
 
     id            = Column( UUID(as_uuid=True), primary_key=True )
@@ -52,11 +52,10 @@ class Event(TranslatableModel,Base):
 
     urls       = relationship( "EventLink" )
     info       = relationship( "EventInfo", lazy='joined' )
-    categories = relationship( "Event", secondary=event_categories_table )
+    categories = relationship( "Category", secondary=event_categories_table )
     images     = relationship( "EventImage" )
     location   = relationship( "Location" )
-    comments   = relationship( "EventComment", back_populates="event" )
-    series     = relationship( "Series", back_populates="events" )
+    series     = relationship( "Series", backref="events" )
 
     @classmethod
     def _search(cls,query,**kwargs):

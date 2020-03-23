@@ -84,17 +84,13 @@ components:
               description:
                 type: string
         parent:
-            oneOf:
-              - type: string
-                format: uuid
-              - $ref: '#/components/schemas/Category'
+            type: string
+            format: uuid
         children:
             type: array
             items:
-              oneOf:
-                - type: string
-                  format: uuid
-                - $ref: '#/components/schemas/Category'
+              type: string
+              format: uuid
     Image:
       properties:
         info:
@@ -187,10 +183,8 @@ components:
               accessibility_information:
                 type: string
         location:
-            oneOf:
-              - type: string
-                format: uuid
-              - $ref: '#/components/schemas/Location'
+            type: string
+            format: uuid
         images:
           type: array
           items:
@@ -198,10 +192,33 @@ components:
         categories:
           type: array
           items:
-            oneOf:
-              - type: string
-                format: uuid
-              - $ref: '#/components/schemas/Category'
+            type: string
+            format: uuid
+    Comment:
+      properties:
+        id:
+          type: string
+          format: uuid
+        contents:
+          type: string
+        resolved:
+          type: boolean
+        edited:
+          type: boolean
+    Reply:
+      properties:
+        id:
+          type: string
+          format: uuid
+        contents:
+          type: string
+        resolved:
+          type: boolean
+        edited:
+          type: boolean
+        parent_id:
+          type: string
+          format: uuid        
     Series:
       properties:
         id:
@@ -247,10 +264,8 @@ components:
               accessibility_information:
                 type: string
         location:
-            oneOf:
-              - type: string
-                format: uuid
-              - $ref: '#/components/schemas/Location'
+            type: string
+            format: uuid
         images:
           type: array
           items:
@@ -258,17 +273,13 @@ components:
         categories:
           type: array
           items:
-            oneOf:
-              - type: string
-                format: uuid
-              - $ref: '#/components/schemas/Category'
+            type: string
+            format: uuid
         events:
           type: array
           items:
-            oneOf:
-              - type: string
-                format: uuid
-              - $ref: '#/components/schemas/Event'
+            type: string
+            format: uuid
     User:
       properties:
         language:
@@ -431,6 +442,70 @@ paths:
               schema:
                 type: string
                 format: binary
+  /events/{id}/comments:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: app.events.add_comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/Comment'
+              - $ref: '#/components/schemas/Reply'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+    get:
+      operationId: app.events.get_comments
+      responses:
+        '200':
+          description: Ok
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+  /events/{id}/comments/{comment_id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - in: path
+        name: comment_id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: app.events.update_comment
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Ok
   /series:
     get:
       security: []
