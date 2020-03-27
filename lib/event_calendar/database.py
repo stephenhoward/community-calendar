@@ -22,6 +22,7 @@ class DB(object, metaclass=Singleton):
             print('Database Exists')
 
         except OperationalError:
+            import event_calendar.model.org
             import event_calendar.model.user
             import event_calendar.model.password_token
             import event_calendar.model.event

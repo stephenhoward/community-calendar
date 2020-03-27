@@ -1,61 +1,36 @@
-from sqlalchemy import Column, Table, String, Text, Enum, Boolean, DateTime, ForeignKey, tuple_
+from sqlalchemy import Column, Table, String, Text, Enum, DateTime, ForeignKey, tuple_
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.dialects.postgresql import UUID
 import enum
-from event_calendar.model import TranslatableModel, CommentableModel, Translation, ContentStatus
+from event_calendar.model.content import Model
+from event_calendar.model.content import PrimaryContentModel, TranslationModel
 from event_calendar.database import Base
 import event_calendar.model.location
-import event_calendar.model.user
-import event_calendar.model.comment
-from event_calendar.model.link import EventLink
 
-event_categories_table = Table('event_categories', Base.metadata,
+events_categories_table = Table('events_categories', Base.metadata,
     Column('event_id',    UUID(as_uuid=True), ForeignKey('events.id')),
     Column('category_id', UUID(as_uuid=True), ForeignKey('categories.id'))
 )
 
-EventAge = enum.Enum( 'EventAge', [
-    '21+',
-    '18+',
-    'All Ages',
-    'Youth',
-    'Big Kids',
-    'Little Kids',
-    'Kids'
-])
-
 EventRepeat = enum.Enum( 'EventRepeat', [
+    'Once',
     'Daily',
     'Weekly',
-    'Monthly'
+    'Monthly',
+    'MonthlyByDayOfWeek'
 ])
 
-EventRepeatBy = enum.Enum( 'EventRepeatBy', [
-    'DayOfMonth',    # 12th of each month
-    'WeekdayOfMonth' # First Tuesday of each month
-])
-
-class Event(CommentableModel,TranslatableModel,Base):
+class Event(PrimaryContentModel,Base):
     __tablename__ = 'events'
 
-    id            = Column( UUID(as_uuid=True), primary_key=True )
-    status        = Column( Enum(ContentStatus) )
-    start         = Column( DateTime )
-    end           = Column( DateTime )
-    dates_only    = Column( Boolean )
-    repeat        = Column( Enum(EventRepeat) )
-    repeat_by     = Column( Enum(EventRepeatBy) )
-    location_id   = Column( UUID(as_uuid=True), ForeignKey('locations.id') )
-    contact_phone = Column( String )
-    contact_email = Column( String )
-    series_id     = Column( UUID(as_uuid=True), ForeignKey('series.id') )
+    location_id = Column( UUID(as_uuid=True), ForeignKey('locations.id') )
+    series_id   = Column( UUID(as_uuid=True), ForeignKey('series.id') )
 
-    urls       = relationship( "EventLink" )
     info       = relationship( "EventInfo", lazy='joined' )
-    categories = relationship( "Category", secondary=event_categories_table )
-    images     = relationship( "EventImage" )
+    categories = relationship( "Category", secondary=events_categories_table )
     location   = relationship( "Location" )
     series     = relationship( "Series", backref="events" )
+    dates      = relationship( "EventDate", back_populates="event" )
 
     @classmethod
     def _search(cls,query,**kwargs):
@@ -75,8 +50,18 @@ class Event(CommentableModel,TranslatableModel,Base):
 
         return d
 
+class EventDate(Model,Base):
+    __tablename__ = 'events_dates'
+
+    event_id        = Column( UUID(as_uuid=True), ForeignKey('events.id') )
+    start_time      = Column( DateTime )
+    end_time        = Column( DateTime )
+    repeat_interval = Column( Enum(EventRepeat) )
+
+    event = relationship("Event")
+
 # for translatable parts of the event
-class EventInfo(Translation,Base):
+class EventInfo(TranslationModel,Base):
     __tablename__ = 'events_i18n'
 
     id          = Column( UUID(as_uuid=True), ForeignKey('events.id'), primary_key=True )

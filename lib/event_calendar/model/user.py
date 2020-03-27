@@ -1,21 +1,15 @@
 import os
 import enum
+import yaml
 import base64
 import cryptography.exceptions
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from cryptography.hazmat.backends import default_backend
-from sqlalchemy import Column, Table, String, Binary, Enum
+from sqlalchemy import Column, String, Binary, Enum
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import UUID
-from event_calendar.model import Model, Translation
+from event_calendar.model import Model
 from event_calendar.database import Base
-import yaml
 
-UserRole = enum.Enum( 'UserRole', [
-    'Contributor',
-    'Editor',
-    'Administrator'
-])
 codes = yaml.load( open('config/languages.yaml','r'), Loader=yaml.FullLoader )
 
 LanguageCode  = enum.Enum( 'LanguageCode', list(codes.keys()) )
@@ -23,7 +17,6 @@ LanguageCode  = enum.Enum( 'LanguageCode', list(codes.keys()) )
 class User(Model,Base):
     __tablename__ = 'users'
 
-    role     = Column( Enum(UserRole) )
     email    = Column( String, unique=True )
     language = Column( Enum(LanguageCode), default='en' )
     name     = Column( String )

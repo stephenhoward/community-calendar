@@ -1,12 +1,11 @@
-from sqlalchemy.orm import relationship
-from event_calendar.model import Model, ContentStatus
-from sqlalchemy import Column, Text, LargeBinary, ForeignKey, Enum
-from sqlalchemy.dialects.postgresql import UUID
+from event_calendar.model import Model
+from event_calendar.model.content import ContentMixin
+from sqlalchemy import Column, Text
 from event_calendar.database import Base
 from event_calendar.config import config
 import os
 
-class Image:
+class BaseImage(object):
     _base_path = config.get('uploads','public')
 
     def __init__(self,**kwargs):
@@ -16,7 +15,7 @@ class Image:
     def path(cls):
         return os.path.join(cls._base_path, cls._type_path )
 
-class SiteImage(Image):
+class SiteImage(BaseImage):
     _type_path = 'site'
 
     def dump(self):
@@ -24,10 +23,11 @@ class SiteImage(Image):
             'filename': self.filename
         }
 
-class ModelImage(Image,Model):
+class Image(BaseImage,ContentMixin,Model,Base):
+    __tablename__ = 'images'
     _draft_path = config.get('uploads','draft')
+    _type_path    = 'events'
     filename    = Column( Text )
-    status      = Column( Enum(ContentStatus) )
 
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
@@ -51,22 +51,3 @@ class ModelImage(Image,Model):
             )
             self.status = 'Active'
             self.save()
-
-class EventImage(ModelImage,Base):
-    __tablename__ = 'event_images'
-    _type_path    = 'events'
-
-    event_id = Column( UUID(as_uuid=True), ForeignKey('events.id') )
-
-class SeriesImage(ModelImage,Base):
-    __tablename__ = 'series_images'
-    _type_path    = 'series'
-
-    series_id = Column( UUID(as_uuid=True), ForeignKey('series.id') )
-
-class CategoryImage(ModelImage,Base):
-    __tablename__ = 'category_images'
-    _type_path    = 'categories'
-
-    category_id = Column( UUID(as_uuid=True), ForeignKey('categories.id') )
-

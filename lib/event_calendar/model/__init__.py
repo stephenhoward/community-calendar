@@ -1,23 +1,13 @@
-from sqlalchemy import Column, Enum
+from sqlalchemy import Column
 from sqlalchemy.inspection import inspect
-from sqlalchemy.orm import relationship, backref
 from sqlalchemy.orm.relationships import RelationshipProperty
 from sqlalchemy.dialects.postgresql import UUID as UUIDColumn
 from event_calendar.database import DB
 from sqlalchemy.orm.exc import NoResultFound
-import enum
-import yaml
 from uuid import UUID, uuid4 as uuid
 from datetime import datetime
 
-db    = DB()
-codes = yaml.load( open('config/languages.yaml','r'), Loader=yaml.FullLoader )
-
-LanguageCode  = enum.Enum( 'LanguageCode', list(codes.keys()) )
-ContentStatus = enum.Enum( 'ContentStatus', [
-    'Draft',
-    'Active'
-])
+db = DB()
 
 class Model(object):
     id = Column( UUIDColumn(as_uuid=True), primary_key=True )
@@ -130,42 +120,3 @@ class Model(object):
     def __hash__(self):
         return hash(self.id)
 
-class TranslatableModel(Model):
-
-    def dump(self):
-        d = super().dump()
-
-        d['info'] = list(map( lambda x: x.dump(), self.info ))
-
-        return d
-
-class Translation(Model):
-    language = Column( Enum(LanguageCode), primary_key=True )
-
-    def __eq__(self,other):
-        if isinstance( other, Translation ):
-            return self.language == other.language
-        elif type(other) is dict:
-            return self.language.name == other['language']
-        else:
-            return False
-
-    def _dont_dump(self):
-        return ['id'];
-
-class CommentableModel (Model):
-
-    def get_comments(self):
-        return Comment.search(
-            target_class == self.__class__.__name__,
-            target_id    == self.id
-        ).all()
-
-    def add_comment(self,json):
-        if ( json['parent_id'] ):
-            reply = Reply.create(json).save()
-            return reply
-        else:
-            comment = Comment.create(json).save()
-            self.comments.add(comment)
-            return comment
