@@ -1,8 +1,8 @@
 from sqlalchemy import Column, String, Enum
 import enum
+from event_calendar.database import Base
 from event_calendar.model import Model
 from event_calendar.model.content import ContentMixin
-from event_calendar.database import Base
 
 LinkType = enum.Enum( 'LinkType', [
     'Information',

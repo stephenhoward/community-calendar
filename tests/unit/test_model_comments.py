@@ -1,14 +1,13 @@
 import unittest
 from unittest.mock import patch, Mock
-from event_calendar.model.comment import Comment,CommentableModel,Reply
-from sqlalchemy import Column, String
-from sqlalchemy.orm import relationship
-import event_calendar.model
-from sqlalchemy.orm import Query
-from event_calendar.database import DB, Base
 from uuid import UUID, uuid4 as uuid
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship, Query
+from event_calendar.database import DB, Base
+from event_calendar.model.comment import Model
+from event_calendar.model.comment import Comment,CommentableMixin,Reply
 
-class ContentMod(CommentableModel,Base):
+class ContentMod(CommentableMixin,Model,Base):
 
     __tablename__ = 'commentable_models'
 
@@ -27,7 +26,7 @@ class TestModelComments(unittest.TestCase):
             'author_id': uuid()
         }
         model = ContentMod.create( { 'id': uuid() } )
-        assert( isinstance(model,CommentableModel) )
+        assert( isinstance(model,CommentableMixin) )
         comment = model.add_comment( comment_data )
         assert( isinstance(comment, Comment ) )
         assert( comment.target_id == model.id )
@@ -46,6 +45,7 @@ class TestModelComments(unittest.TestCase):
         model = ContentMod.create( { 'id': uuid() } )
         self.assertRaises( Exception, model.add_comment, reply_data )
 
+    # TODO
     # @patch('event_calendar.model.db.session')
     # def test_add_good_reply(self,mock_session):
     #     mock_session.add.return_value    = True

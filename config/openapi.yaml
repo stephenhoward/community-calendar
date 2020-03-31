@@ -150,25 +150,6 @@ components:
           enum:
             - Draft
             - Active
-        start:
-          type: string
-          format: date-time
-        end:
-          type: string
-          format: date-time
-        dates_only:
-          type: boolean
-        repeat:
-          type: string
-          enum:
-            - Daily
-            - Weekly
-            - Monthly
-        repeat_by:
-          type: string
-          enum:
-            - DayOfMonth
-            - WeekdayOfMonth
         info:
           type: array
           items:
@@ -185,10 +166,16 @@ components:
         location:
             type: string
             format: uuid
+        dates:
+          type: array
+          items:
+            type: string
+            format: uuid
         images:
           type: array
           items:
-            $ref: '#/components/schemas/Image'
+            type: string
+            format: uuid
         categories:
           type: array
           items:
@@ -199,15 +186,7 @@ components:
         id:
           type: string
           format: uuid
-        contents:
-          type: string
-        resolved:
-          type: boolean
-        edited:
-          type: boolean
-    Reply:
-      properties:
-        id:
+        target_id:
           type: string
           format: uuid
         contents:
@@ -216,7 +195,20 @@ components:
           type: boolean
         edited:
           type: boolean
-        parent_id:
+        reples:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reply'
+    Reply:
+      properties:
+        id:
+          type: string
+          format: uuid
+        contents:
+          type: string
+        edited:
+          type: boolean
+        comment_id:
           type: string
           format: uuid        
     Series:
@@ -237,19 +229,6 @@ components:
           enum:
             - Draft
             - Active
-        start:
-          type: string
-          format: date-time
-        end:
-          type: string
-          format: date-time
-        dates_only:
-          type: boolean
-        repeat_by:
-          type: string
-          enum:
-            - DayOfMonth
-            - WeekdayOfMonth
         info:
           type: array
           items:
@@ -263,13 +242,11 @@ components:
                 type: string
               accessibility_information:
                 type: string
-        location:
-            type: string
-            format: uuid
         images:
           type: array
           items:
-            $ref: '#/components/schemas/Image'
+            type: string
+            format: uuid
         categories:
           type: array
           items:
@@ -280,6 +257,20 @@ components:
           items:
             type: string
             format: uuid
+    UserRole:
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        org_id:
+          type: string
+          format: uuid
+        role:
+          type: string
+          enum:
+            - Administrator
+            - Editor
+            - Contributor
     User:
       properties:
         language:
@@ -287,14 +278,6 @@ components:
         email:
           type: string
           format: email
-        roles:
-          type: array
-          items:
-            type: string
-            enum:
-              - Administrator
-              - Editor
-              - Contributor
 paths:
   /site:
     get:
@@ -442,11 +425,16 @@ paths:
               schema:
                 type: string
                 format: binary
-  /events/{id}/comments:
+  /comments:
     parameters:
       - in: path
         name: id
         required: true
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: content
         schema:
           type: string
           format: uuid
@@ -477,7 +465,7 @@ paths:
               schema:
                 type: string
                 format: binary
-  /events/{id}/comments/{comment_id}:
+  /comments/{comment_id}:
     parameters:
       - in: path
         name: id

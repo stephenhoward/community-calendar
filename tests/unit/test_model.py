@@ -1,21 +1,13 @@
 import unittest
 from unittest.mock import patch
-from event_calendar.model import Model
+from uuid import UUID, uuid4 as uuid
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID as UUIDColumn
 from sqlalchemy.orm import relationship
-import event_calendar.model
+from event_calendar.model import Model
 from event_calendar.database import DB, Base
-from uuid import UUID, uuid4 as uuid
 
 db = DB()
-
-class TestCodes(unittest.TestCase):
-
-    def test_codes_exist(self):
-        assert( 'en' in event_calendar.model.LanguageCode.__members__ )
-        assert( 'es' in event_calendar.model.LanguageCode.__members__ )
-        assert( 'fr' in event_calendar.model.LanguageCode.__members__ )
 
 class ChildMod(Model,Base):
 
