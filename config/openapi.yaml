@@ -48,90 +48,6 @@ components:
     Ok:
       description: Ok
   schemas:
-    Site:
-      properties:
-        info:
-          type: array
-          items:
-            type: object
-            properties:
-              language:
-                $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
-              title:
-                type: string
-        default_language:
-          $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
-        languages:
-          type: array
-          items:
-            $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
-        header_image:
-          $ref: '#/components/schemas/Image'
-    Category:
-      properties:
-        id:
-          type: string
-          format: uuid
-        info:
-          type: array
-          items:
-            type: object
-            properties:
-              language:
-                $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
-              name:
-                type: string
-              description:
-                type: string
-        parent:
-            type: string
-            format: uuid
-        children:
-            type: array
-            items:
-              type: string
-              format: uuid
-    Image:
-      properties:
-        info:
-          type: array
-          items:
-            type: object
-            properties:
-              language:
-                $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
-              title:
-                type: string
-              description:
-                type: string
-        data:
-          type: string
-          format: byte
-    Location:
-      properties:
-        address1:
-          type: string
-        address2:
-          type: string
-        city:
-          type: string
-        state:
-          type: string
-        postal_code:
-          type: string
-        info:
-          type: array
-          items:
-            type: object
-            properties:
-              language:
-                $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
-              name:
-                type: string
-              description:
-                type: string
-              accessibility_information:
-                type: string
     Event:
       properties:
         id:
@@ -181,36 +97,6 @@ components:
           items:
             type: string
             format: uuid
-    Comment:
-      properties:
-        id:
-          type: string
-          format: uuid
-        target_id:
-          type: string
-          format: uuid
-        contents:
-          type: string
-        resolved:
-          type: boolean
-        edited:
-          type: boolean
-        reples:
-          type: array
-          items:
-            $ref: '#/components/schemas/Reply'
-    Reply:
-      properties:
-        id:
-          type: string
-          format: uuid
-        contents:
-          type: string
-        edited:
-          type: boolean
-        comment_id:
-          type: string
-          format: uuid        
     Series:
       properties:
         id:
@@ -257,6 +143,119 @@ components:
           items:
             type: string
             format: uuid
+    Location:
+      properties:
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postal_code:
+          type: string
+        info:
+          type: array
+          items:
+            type: object
+            properties:
+              language:
+                $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
+              name:
+                type: string
+              description:
+                type: string
+              accessibility_information:
+                type: string
+    Category:
+      properties:
+        id:
+          type: string
+          format: uuid
+        info:
+          type: array
+          items:
+            type: object
+            properties:
+              language:
+                $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
+              name:
+                type: string
+              description:
+                type: string
+        parent:
+            type: string
+            format: uuid
+        children:
+            type: array
+            items:
+              type: string
+              format: uuid
+    Link:
+      properties:
+        url:
+          type: string
+          format: url
+        type:
+          type: string
+          enum:
+            - Information
+            - Tickets
+            - RSVP
+    Image:
+      properties:
+        info:
+          type: array
+          items:
+            type: object
+            properties:
+              language:
+                $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
+              title:
+                type: string
+              description:
+                type: string
+        data:
+          type: string
+          format: byte
+    Comment:
+      properties:
+        id:
+          type: string
+          format: uuid
+        target_id:
+          type: string
+          format: uuid
+        contents:
+          type: string
+        resolved:
+          type: boolean
+        edited:
+          type: boolean
+        reples:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reply'
+    Reply:
+      properties:
+        id:
+          type: string
+          format: uuid
+        contents:
+          type: string
+        edited:
+          type: boolean
+        comment_id:
+          type: string
+          format: uuid        
+    User:
+      properties:
+        language:
+          $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
+        email:
+          type: string
+          format: email
     UserRole:
       properties:
         user_id:
@@ -271,61 +270,31 @@ components:
             - Administrator
             - Editor
             - Contributor
-    User:
+    Org:
       properties:
-        language:
-          $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
-        email:
+        name:
           type: string
-          format: email
+    Site:
+      properties:
+        info:
+          type: array
+          items:
+            type: object
+            properties:
+              language:
+                $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
+              title:
+                type: string
+        default_language:
+          $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
+        languages:
+          type: array
+          items:
+            $ref: 'file:/opt/calendar/config/language_codes.yaml#/LanguageCode'
+        header_image:
+          $ref: '#/components/schemas/Image'
+
 paths:
-  /site:
-    get:
-      security: []
-      responses:
-        '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Site'
-    post:
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Site'
-      responses:
-        '200':
-          $ref: '#/components/responses/Ok'
-  /site/image:
-    post:
-      operationId: app.site.post_image
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-      responses:
-        '200':
-          description: Ok
-  /site/languages:
-    get:
-      security: []
-      operationId: app.site.get_languages
-      responses:
-        '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                type: object
 
   /events:
     get:
@@ -357,7 +326,6 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/Ok'
-
   /events/{id}:
     parameters:
       - in: path
@@ -388,112 +356,7 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/Ok'
-  /events/{id}/image:
-    parameters:
-      - in: path
-        name: id
-        required: true
-        schema:
-          type: string
-          format: uuid
-    post:
-      operationId: app.events.post_image
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-      responses:
-        '200':
-          description: Ok
-    get:
-      operationId: app.events.get_image
-      responses:
-        '200':
-          description: Ok
-          content:
-            image/png:
-              schema:
-                type: string
-                format: binary
-            image/jpeg:
-              schema:
-                type: string
-                format: binary
-  /comments:
-    parameters:
-      - in: path
-        name: id
-        required: true
-        schema:
-          type: string
-          format: uuid
-      - in: query
-        name: content
-        schema:
-          type: string
-          format: uuid
-    post:
-      operationId: app.events.add_comment
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              oneOf:
-              - $ref: '#/components/schemas/Comment'
-              - $ref: '#/components/schemas/Reply'
-      responses:
-        '200':
-          $ref: '#/components/responses/Ok'
-    get:
-      operationId: app.events.get_comments
-      responses:
-        '200':
-          description: Ok
-          content:
-            image/png:
-              schema:
-                type: string
-                format: binary
-            image/jpeg:
-              schema:
-                type: string
-                format: binary
-  /comments/{comment_id}:
-    parameters:
-      - in: path
-        name: id
-        required: true
-        schema:
-          type: string
-          format: uuid
-      - in: path
-        name: comment_id
-        required: true
-        schema:
-          type: string
-          format: uuid
-    post:
-      operationId: app.events.update_comment
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-      responses:
-        '200':
-          description: Ok
+
   /series:
     get:
       security: []
@@ -516,7 +379,6 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/Ok'
-
   /series/{id}:
     parameters:
       - in: path
@@ -547,7 +409,30 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/Ok'
-  /series/{id}/image:
+
+  /locations:
+    get:
+      security: []
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+  /locations/{id}:
     parameters:
       - in: path
         name: id
@@ -555,35 +440,29 @@ paths:
         schema:
           type: string
           format: uuid
-    post:
-      operationId: app.series.post_image
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-      responses:
-        '200':
-          description: Ok
     get:
-      operationId: app.series.get_image
+      security: []
       responses:
         '200':
           description: Ok
           content:
-            image/png:
+            application/json:
               schema:
-                type: string
-                format: binary
-            image/jpeg:
-              schema:
-                type: string
-                format: binary
+                $ref: '#/components/schemas/Location'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      operationId: app.locations.update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+
   /categories:
     get:
       security: []
@@ -640,8 +519,290 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/Ok'
-  /users:
+
+  /links:
     get:
+      security: []
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Link'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+  /links/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      security: []
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Link'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      operationId: app.links.update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Series'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+
+  /images:
+    post:
+      operationId: app.images.post_image
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Ok
+  /images/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: app.images.get_image
+      responses:
+        '200':
+          description: Ok
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+
+  /editing/comments:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: content
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: app.events.add_comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/Comment'
+              - $ref: '#/components/schemas/Reply'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+    get:
+      operationId: app.comments.get_comments
+      responses:
+        '200':
+          description: Ok
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+  /editing/comments/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - in: path
+        name: comment_id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: app.comments.update_comment
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Ok
+
+  /editing/replies:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: comment
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: app.comments.add_reply
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/Comment'
+              - $ref: '#/components/schemas/Reply'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+    get:
+      operationId: app.comments.get_replies
+      responses:
+        '200':
+          description: Ok
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+  /editing/replies/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - in: path
+        name: comment_id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      operationId: app.comments.update_reply
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Ok
+
+  /site:
+    get:
+      security: []
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Site'
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Site'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+  /site/image:
+    post:
+      operationId: app.site.post_image
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Ok
+  /site/languages:
+    get:
+      security: []
+      operationId: app.site.get_languages
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /site/users:
+    get:
+      operationId: app.users.search
       responses:
         '200':
           description: Ok
@@ -652,6 +813,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/User'
     post:
+      operationId: app.users.post
       requestBody:
         required: true
         content:
@@ -661,7 +823,7 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/Ok'
-  /users/{id}:
+  /site/users/{id}:
     parameters:
       - in: path
         name: id
@@ -670,6 +832,7 @@ paths:
           type: string
           format: uuid
     get:
+      operationId: app.users.get
       responses:
         '200':
           description: Ok
@@ -688,6 +851,59 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/Ok'
+
+  /site/orgs:
+    get:
+      operationId: app.orgs.search
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Org'
+    post:
+      operationId: app.orgs.post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Org'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+  /site/orgs/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: app.orgs.get
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Org'
+    post:
+      operationId: app.orgs.update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Org'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+
   /auth/token:
     post:
       description: submit user credentials to receive a JSON web token
@@ -780,5 +996,3 @@ paths:
       responses:
         '200':
           description: password set
-
-

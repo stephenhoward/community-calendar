@@ -1,6 +1,5 @@
 from flask import g, request
 from event_calendar.model.event import Event
-from event_calendar.model.image import Image
 from datetime import datetime, timedelta
 import app.handlers as handlers
 
@@ -30,9 +29,6 @@ def search():
     g.search_args = query
 
     return _search()
-
-post_image = handlers.upload_file_for(Image)
-get_image  = handlers.serve_file_for(Image)
 
 add_comment    = handlers.post_comment_for(Event)
 get_comments   = handlers.get_comments_for(Event)
