@@ -29,6 +29,9 @@ def get_for(cls):
 
 def post_for(cls):
     def post():
+        if not g.user.has_role('Contributor', for_org = request.json.org_id):
+            abort(403)
+
         model = cls.create(request.json).save()
 
         return jsonify( model )
@@ -36,6 +39,9 @@ def post_for(cls):
 
 def update_for(cls):
     def update(id):
+        if not g.user.has_role('Contributor', for_org = request.json.org_id):
+            abort(403)
+
         model = cls.get(id)
 
         if ( model ):
@@ -47,6 +53,9 @@ def update_for(cls):
 
 def delete_for(cls):
     def delete(id):
+        if not g.user.has_role('Contributor', for_org = request.json.org_id):
+            abort(403)
+
         model = cls.get(id);
 
         if ( model ):
@@ -63,26 +72,24 @@ def _file_extension(filename):
     return filename.rsplit('.',1)[1].lower()
 
 def upload_file_for(cls):
-    def upload_file(**kwargs):
-        if 'file' not in request.files:
+    if 'file' not in request.files:
+        abort(400)
+
+    file = request.files['file']
+    if file.filename == '':
+        abort(400)
+
+    if file:
+        file_extension = _file_extension(file.filename)
+
+        if file_extension == None or file_extension not in config.get('uploads','extensions'):
             abort(400)
 
-        file = request.files['file']
-        if file.filename == '':
-            abort(400)
+        filename = str(uuid()) + '.' + file_extension
+        file.save( os.path.join( cls.path(), filename ) )
 
-        if file:
-            file_extension = _file_extension(file.filename)
-
-            if file_extension == None or file_extension not in config.get('uploads','extensions'):
-                abort(400)
-
-            filename = str(uuid()) + '.' + file_extension
-            file.save( os.path.join( cls.path(), filename ) )
-
-            uploaded_file = cls( filename = filename )
-            return jsonify( uploaded_file )
-    return upload_file
+        return cls( filename = filename )
+        return jsonify( uploaded_file )
 
 def serve_file_for(cls):
     def serve_file(**kwargs):
@@ -100,7 +107,11 @@ def get_comments_for(cls):
 
 def post_comment_for(cls):
     def post(**kwargs):
-        model   = cls.get(kwargs['id'])
+        model = cls.get(kwargs['id'])
+
+        if not g.user.has_role('Contributor', for_org = model.org_id):
+            abort(403)
+
         comment = model.add_comment(request.json)
         model.save()
 
@@ -109,7 +120,11 @@ def post_comment_for(cls):
 
 def update_comment_for(cls):
     def update(**kwargs):
-        model   = cls.get(kwargs['id'])
+        model = cls.get(kwargs['id'])
+
+        if not g.user.has_role('Contributor', for_org = model.org_id):
+            abort(403)
+
         comment = model.get_comment(kwargs['comment_id'])
 
         if ( comment ):

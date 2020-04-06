@@ -3,7 +3,6 @@ from event_calendar.site_settings import site_settings, languages
 from event_calendar.model.image import SiteImage
 import app.handlers as handlers
 
-post_image = handlers.upload_file_for(SiteImage)
 
 def search():
     return jsonify( site_settings )
@@ -16,3 +15,7 @@ def post():
 
 def get_languages():
     return jsonify( languages )
+
+def post_image():
+    image = handlers.upload_file_for(SiteImage)
+    return jsonify( image )

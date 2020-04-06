@@ -1,9 +1,6 @@
 from event_calendar.config import config
 from event_calendar.model.user import User
-from unittest.mock import patch
-from sqlalchemy.orm import Query
-from uuid import UUID, uuid4 as uuid
-from event_calendar.database import DB, Base
+from event_calendar.database import DB
 import unittest
 
 db = DB()
