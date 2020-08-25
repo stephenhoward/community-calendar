@@ -1,8 +1,9 @@
 from event_calendar.model.series import Series
 import app.handlers as handlers
+from app.guards import guard_content
 
-search = handlers.search_for(Series)
-get    = handlers.get_for(Series)
-post   = handlers.post_for(Series)
-update = handlers.update_for(Series)
-delete = handlers.delete_for(Series)
+search = guard_content( Series, method = handlers.search )
+get    = guard_content( Series, method = handlers.get    )
+post   = guard_content( Series, method = handlers.post   )
+update = guard_content( Series, method = handlers.update )
+delete = guard_content( Series, method = handlers.delete )

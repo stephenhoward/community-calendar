@@ -2,12 +2,13 @@ from flask import g, request
 from event_calendar.model.event import Event
 from datetime import datetime, timedelta
 import app.handlers as handlers
+from app.guards import guard_content
 
-get     = handlers.get_for(Event)
-post    = handlers.post_for(Event)
-update  = handlers.update_for(Event)
-delete  = handlers.delete_for(Event)
-_search = handlers.search_for(Event)
+get     = guard_content( Event, method = handlers.get    )
+post    = guard_content( Event, method = handlers.post   )
+update  = guard_content( Event, method = handlers.update )
+delete  = guard_content( Event, method = handlers.delete )
+_search = guard_content( Event, method = handlers.search )
 
 search_parameters = {
     'from':       ( lambda value: ( 'start[ge]', datetime.strptime(value, "%Y-%m-%d") ) ),
@@ -29,7 +30,3 @@ def search():
     g.search_args = query
 
     return _search()
-
-add_comment    = handlers.post_comment_for(Event)
-get_comments   = handlers.get_comments_for(Event)
-update_comment = handlers.update_comment_for(Event)

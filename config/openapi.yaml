@@ -53,6 +53,9 @@ components:
         id:
           type: string
           format: uuid
+        org_id:
+          type: string
+          format: uuid
         contact_phone:
           type: string
         contact_url:
@@ -102,6 +105,9 @@ components:
         id:
           type: string
           format: uuid
+        org_id:
+          type: string
+          format: uuid
         contact_phone:
           type: string
         contact_url:
@@ -145,6 +151,12 @@ components:
             format: uuid
     Location:
       properties:
+        id:
+          type: string
+          format: uuid
+        org_id:
+          type: string
+          format: uuid
         address1:
           type: string
         address2:
@@ -194,6 +206,9 @@ components:
               format: uuid
     Link:
       properties:
+        org_id:
+          type: string
+          format: uuid
         url:
           type: string
           format: url
@@ -568,7 +583,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Series'
+              $ref: '#/components/schemas/Link'
       responses:
         '200':
           $ref: '#/components/responses/Ok'
@@ -613,45 +628,28 @@ paths:
                 format: binary
 
   /editing/comments:
-    parameters:
-      - in: path
-        name: id
-        required: true
-        schema:
-          type: string
-          format: uuid
-      - in: query
-        name: content
-        schema:
-          type: string
-          format: uuid
     post:
-      operationId: app.events.add_comment
+      operationId: app.comments.post
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              oneOf:
-              - $ref: '#/components/schemas/Comment'
-              - $ref: '#/components/schemas/Reply'
+              $ref: '#/components/schemas/Comment'
       responses:
         '200':
           $ref: '#/components/responses/Ok'
     get:
-      operationId: app.comments.get_comments
+      operationId: app.comments.search
       responses:
         '200':
           description: Ok
           content:
-            image/png:
+            application/json:
               schema:
-                type: string
-                format: binary
-            image/jpeg:
-              schema:
-                type: string
-                format: binary
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
   /editing/comments/{id}:
     parameters:
       - in: path
@@ -660,68 +658,52 @@ paths:
         schema:
           type: string
           format: uuid
-      - in: path
-        name: comment_id
-        required: true
-        schema:
-          type: string
-          format: uuid
     post:
-      operationId: app.comments.update_comment
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-      responses:
-        '200':
-          description: Ok
-
-  /editing/replies:
-    parameters:
-      - in: path
-        name: id
-        required: true
-        schema:
-          type: string
-          format: uuid
-      - in: query
-        name: comment
-        schema:
-          type: string
-          format: uuid
-    post:
-      operationId: app.comments.add_reply
+      operationId: app.comments.update
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              oneOf:
-              - $ref: '#/components/schemas/Comment'
-              - $ref: '#/components/schemas/Reply'
+              $ref: '#/components/schemas/Comment'
       responses:
         '200':
-          $ref: '#/components/responses/Ok'
+          description: Ok
     get:
-      operationId: app.comments.get_replies
+      operationId: app.comments.get
       responses:
         '200':
           description: Ok
           content:
-            image/png:
+            application/json:
               schema:
-                type: string
-                format: binary
-            image/jpeg:
+                $ref: '#/components/schemas/Comment'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /editing/replies:
+    post:
+      operationId: app.replies.post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reply'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+    get:
+      operationId: app.replies.search
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
               schema:
-                type: string
-                format: binary
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reply'
   /editing/replies/{id}:
     parameters:
       - in: path
@@ -730,27 +712,28 @@ paths:
         schema:
           type: string
           format: uuid
-      - in: path
-        name: comment_id
-        required: true
-        schema:
-          type: string
-          format: uuid
     post:
-      operationId: app.comments.update_reply
+      operationId: app.replies.update
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
+              $ref: '#/components/schemas/Reply'
       responses:
         '200':
           description: Ok
+    get:
+      operationId: app.replies.get
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reply'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   /site:
     get:
@@ -769,6 +752,18 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Site'
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+  /site/initialize:
+    post:
+      operationId: app.site.initialize
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
       responses:
         '200':
           $ref: '#/components/responses/Ok'

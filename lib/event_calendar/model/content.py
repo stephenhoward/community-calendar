@@ -18,7 +18,7 @@ ContentStatus = enum.Enum( 'ContentStatus', [
     'Active'
 ])
 
-class ContentMixin(object):
+class Content(object):
 
     status = Column( Enum(ContentStatus) )
 
@@ -54,7 +54,7 @@ class TranslationModel(Model):
         return ['id'];
 
 
-class PrimaryContentModel( Model, ContentMixin, CommentableMixin, TranslatableMixin ):
+class PrimaryContentModel( Model, Content, CommentableMixin, TranslatableMixin ):
 
     contact_phone = Column( String )
     contact_email = Column( String )

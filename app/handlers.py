@@ -1,12 +1,16 @@
 from flask import jsonify, g, request, abort, send_from_directory
 from event_calendar.config import config
 from event_calendar.query_builder import from_query_string
+from event_calendar.model.comment import BaseComment
 from werkzeug.utils import secure_filename
 import os
 from uuid import uuid4 as uuid
 
-def search_for(cls):
-    def search():
+def search(cls,guard):
+    def _search():
+
+        guard('search',cls)
+
         if hasattr(g,'search_args'):
             args = g.search_args
         else:
@@ -15,121 +19,49 @@ def search_for(cls):
         q = cls.search( *from_query_string( cls, **args ) )
 
         return jsonify( q.all() )
-    return search
+    return _search
 
-def get_for(cls):
-    def get(**kwargs):
-        model = cls.get(kwargs['id'])
+def get(cls,guard):
+    def _get(id):
+        model = _get_model(cls,id, lambda m: guard('get',m))
 
-        if ( model ):
-            return jsonify( model )
-        else:
-            abort(404)
-    return get
+        return jsonify(model)
+    return _get
 
-def post_for(cls):
-    def post():
-        if not g.user.has_role('Contributor', for_org = request.json.org_id):
-            abort(403)
+def post(cls,guard):
+    def _post():
 
-        model = cls.create(request.json).save()
+        model = cls.create(request.json)
 
-        return jsonify( model )
-    return post
+        guard('post',model)
 
-def update_for(cls):
-    def update(id):
-        if not g.user.has_role('Contributor', for_org = request.json.org_id):
-            abort(403)
-
-        model = cls.get(id)
-
-        if ( model ):
-            model.update( request.json ).save()
-            return jsonify( model )
-        else:
-            abort(404)
-    return update
-
-def delete_for(cls):
-    def delete(id):
-        if not g.user.has_role('Contributor', for_org = request.json.org_id):
-            abort(403)
-
-        model = cls.get(id);
-
-        if ( model ):
-            model.delete()
-            return jsonify( ok = 1 )
-        else:
-            abort(404)
-    return delete
-
-def _file_extension(filename):
-    if '.' not in filename:
-        return None
-
-    return filename.rsplit('.',1)[1].lower()
-
-def upload_file_for(cls):
-    if 'file' not in request.files:
-        abort(400)
-
-    file = request.files['file']
-    if file.filename == '':
-        abort(400)
-
-    if file:
-        file_extension = _file_extension(file.filename)
-
-        if file_extension == None or file_extension not in config.get('uploads','extensions'):
-            abort(400)
-
-        filename = str(uuid()) + '.' + file_extension
-        file.save( os.path.join( cls.path(), filename ) )
-
-        return cls( filename = filename )
-        return jsonify( uploaded_file )
-
-def serve_file_for(cls):
-    def serve_file(**kwargs):
-        file = cls.get(kwargs[id])
-        return send_from_directory(cls.path(),file.filename)
-    return serve_file
-
-
-def get_comments_for(cls):
-    def get_comments(**kwargs):
-        model = cls.get(kwargs['id'])
-        return jsonify( model.comments )
-    return get_comments
-
-
-def post_comment_for(cls):
-    def post(**kwargs):
-        model = cls.get(kwargs['id'])
-
-        if not g.user.has_role('Contributor', for_org = model.org_id):
-            abort(403)
-
-        comment = model.add_comment(request.json)
         model.save()
+        return jsonify( model )
+    return _post
 
-        return jsonify( comment )
-    return post
+def update(cls,guard):
+    def _update(id):
 
-def update_comment_for(cls):
-    def update(**kwargs):
-        model = cls.get(kwargs['id'])
+        model = _get_model(cls,id, lambda m: guard('update',m))
 
-        if not g.user.has_role('Contributor', for_org = model.org_id):
-            abort(403)
+        model.update( request.json ).save()
+        return jsonify( model )
+    return _update
 
-        comment = model.get_comment(kwargs['comment_id'])
+def delete(cls,guard):
+    def _delete(id):
 
-        if ( comment ):
-            comment.update( request.json ).save()
-            return jsonify( comment )
-        else:
-            abort(404)
-    return update
+        model = _get_model(cls,id, lambda m: guard('delete',m))
+
+        model.delete()
+        return jsonify( ok = 1 )
+    return _delete
+
+def _get_model(cls,id,guard):
+    model = cls.get(id);
+
+    if model:
+        guard(model)
+        return model
+    else:
+        abort(404)

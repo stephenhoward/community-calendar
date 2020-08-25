@@ -1,8 +1,9 @@
 from event_calendar.model.location import Location
 import app.handlers as handlers
+from app.guards import guard_content
 
-search = handlers.search_for(Location)
-get    = handlers.get_for(Location)
-post   = handlers.post_for(Location)
-update = handlers.update_for(Location)
-delete = handlers.delete_for(Location)
+search = guard_content( Location, method = handlers.search )
+get    = guard_content( Location, method = handlers.get    )
+post   = guard_content( Location, method = handlers.post   )
+update = guard_content( Location, method = handlers.update )
+delete = guard_content( Location, method = handlers.delete )

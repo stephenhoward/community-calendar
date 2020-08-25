@@ -16,20 +16,20 @@ class TestAPI(unittest.TestCase):
 
     def test_spec(self):
         res = self.client.get('/v1/openapi.json')
-        assert(res.status_code == 200 )
+        self.assertEqual(res.status_code, 200 )
 
     def test_events_search(self):
         with patch.object( Query, 'all', return_value = [
             { 'id': uuid() }
         ]):
             res = self.client.get('/v1/events')
-            assert(res.status_code == 200 )
+            self.assertEqual(res.status_code, 200 )
 
     def test_event_get(self):
         id = uuid()
         with patch.object( Query, 'one', return_value = { 'id': id } ):
             res = self.client.get('/v1/events/' + str(id) )
-            assert(res.status_code == 200 )
+            self.assertEqual(res.status_code, 200 )
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,5 +1,5 @@
 from event_calendar.model import Model
-from event_calendar.model.content import ContentMixin
+from event_calendar.model.content import Content
 from sqlalchemy import Column, Text
 from event_calendar.database import Base
 from event_calendar.config import config
@@ -23,7 +23,7 @@ class SiteImage(BaseImage):
             'filename': self.filename
         }
 
-class Image(BaseImage,ContentMixin,Model,Base):
+class Image(BaseImage,Content,Model,Base):
     __tablename__ = 'images'
     _draft_path = config.get('uploads','draft')
     _type_path    = 'events'

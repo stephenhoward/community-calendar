@@ -3,10 +3,10 @@ from event_calendar.model.comment import Comment,Reply
 import app.handlers as handlers
 from app.guards import guard_comment
 
-search = guard_comment( Comment, handlers.search )
-get    = guard_comment( Comment, handlers.get )
-post   = guard_comment( Comment, handlers.post )
-update = guard_comment( Comment, handlers.update )
+search = guard_comment( Reply, handlers.search )
+get    = guard_comment( Reply, handlers.get )
+post   = guard_comment( Reply, handlers.post )
+update = guard_comment( Reply, handlers.update )
 
 
 def get_comments(cls):

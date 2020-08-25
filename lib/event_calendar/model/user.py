@@ -5,7 +5,7 @@ import base64
 import cryptography.exceptions
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from cryptography.hazmat.backends import default_backend
-from sqlalchemy import Column, String, Binary, Enum
+from sqlalchemy import Column, String, Binary, Enum, or_
 import event_calendar.model.org
 from sqlalchemy.orm import relationship
 from event_calendar.model import Model
@@ -87,8 +87,11 @@ class User(Model,Base):
         if role not in UserRoleEnum.__members__:
             raise RoleError( 'No such role "' + role )
 
-        org_id = kwargs['for_org'].id if isinstance(kwargs['for_org'],Org) else kwargs['for_org']
-        roles  = self.roles.filter( UserRole.role == role, UserRole.org_id == org_id ).all()
+        if kwargs['for_org'] is None:
+            roles = self.roles.filter( UserRole.role == role, UserRole.org_id == None )
+        else:
+            org_id = kwargs['for_org'].id if isinstance(kwargs['for_org'],Org) else kwargs['for_org']
+            roles  = self.roles.filter( UserRole.role == role, or_( UserRole.org_id == org_id,  UserRole.org_id == None ) ).all()
 
         return True if len(roles) > 0 else False
 
