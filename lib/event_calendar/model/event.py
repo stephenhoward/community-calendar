@@ -8,6 +8,8 @@ from event_calendar.database import DB
 from event_calendar.model.content import Model
 from event_calendar.model.content import PrimaryContentModel, TranslationModel
 from event_calendar.database import Base
+from event_calendar.model.category import Category
+from event_calendar.model.series import Series
 import event_calendar.model.location
 
 db = DB()

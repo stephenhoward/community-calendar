@@ -1,9 +1,8 @@
 from flask import jsonify, g, request, abort, send_from_directory
 from event_calendar.config import config
-from event_calendar.query_builder import from_query_string
+from event_calendar.query_builder import query_from_query_string
 from event_calendar.model.comment import BaseComment
 from werkzeug.utils import secure_filename
-import os
 from uuid import uuid4 as uuid
 
 def search(cls,guard):
@@ -16,7 +15,7 @@ def search(cls,guard):
         else:
             args = request.args
 
-        q = cls.search( *from_query_string( cls, **args ) )
+        q = query_from_query_string( cls, **args )
 
         return jsonify( q.all() )
     return _search

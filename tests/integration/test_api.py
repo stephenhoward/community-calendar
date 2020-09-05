@@ -1,7 +1,3 @@
-import sys
-
-sys.path.append('/opt/calendar')
-
 import unittest
 from app import create_app
 from unittest.mock import patch
