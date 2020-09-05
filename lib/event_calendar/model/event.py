@@ -2,10 +2,15 @@ from sqlalchemy import Column, Table, String, Text, Enum, DateTime, ForeignKey, 
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.dialects.postgresql import UUID
 import enum
+import datetime
+from dateutil import relativedelta, rrule
+from event_calendar.database import DB
 from event_calendar.model.content import Model
 from event_calendar.model.content import PrimaryContentModel, TranslationModel
 from event_calendar.database import Base
 import event_calendar.model.location
+
+db = DB()
 
 events_categories_table = Table('events_categories', Base.metadata,
     Column('event_id',    UUID(as_uuid=True), ForeignKey('events.id')),
@@ -57,8 +62,66 @@ class EventDate(Model,Base):
     start_time      = Column( DateTime )
     end_time        = Column( DateTime )
     repeat_interval = Column( Enum(EventRepeat) )
+    repeat_end      = Column( DateTime )
 
     event = relationship("Event")
+
+    def save(self):
+        super().save()
+        self.create_instances()
+
+    def delete(self):
+        super().delete()
+        self.destroy_instances()
+
+    def create_instances(self):
+
+        self.destroy_instances( fromNow = True)
+
+        end_time_delta = relative_delta( self.end_time, self.start_time )
+        repeat_end     = self.repeat_end or datetime.now() + relativedelta( years = 1 )
+        dates          = []
+
+        if self.repeat_interval is EventRepeat.Once:
+            dates = [ start_time ]
+        elif self.repeat_interval is EventRepeat.MonthlyByDayOfWeek:
+            dates = list(rrule( self.repeat_interval, dtstart=self.start_time, until=repeat_end, byweekday=self.start_time.weekday() ))
+        else:
+            dates = list(rrule( self.repeat_interval, dtstart=self.start_time, until=repeat_end ))
+
+        for dt in dates:
+            self.create_instance(dt,dt + end_time_delta )
+
+        db.session.commit()
+
+    def create_instance(self,start_time,end_time):
+        return EventDateInstance.create({
+            start_time:    start_time,
+            end_time:      end_time,
+            event_id:      self.event_id,
+            event_date_id: self.id
+        })
+
+    def destroy_instances(self, **kwargs ):
+
+        query = EventDateInstance.query.filter( EventDateInstance.event_date_id == self.id )
+
+        if ( kwargs['fromNow'] ):
+          query = query.filter( EventDateInstance.start_time >= datetime.now() )
+
+        query.delete(synchronize_session=False)
+
+
+class EventDateInstance(Model,Base):
+    __tablename__ = 'events_date_instances'
+
+    event_id        = Column( UUID(as_uuid=True), ForeignKey('events.id') )
+    event_date_id   = Column( UUID(as_uuid=True), ForeignKey('events_dates.id') )
+    start_time      = Column( DateTime )
+    end_time        = Column( DateTime )
+
+    event      = relationship("Event")
+    event_date = relationship("EventDate")
 
 # for translatable parts of the event
 class EventInfo(TranslationModel,Base):

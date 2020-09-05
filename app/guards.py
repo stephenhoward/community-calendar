@@ -1,6 +1,5 @@
 from flask import g, abort
 from event_calendar.model.content import Content, ContentStatus
-import sys
 import inspect
 
 def guard_passthrough(cls, **kwargs):
@@ -18,14 +17,12 @@ def guard_content(cls, **kwargs ):
             if not issubclass(model,Content):
                 abort(403)
         elif not isinstance(model,Content):
-            sys.stderr.write( "Class: " + model.__class__.__name__ + "\n")
-            sys.stderr.write( "Is Subclass: " + str(isinstance(model,Content)) )
             abort(403)
 
         if 'user' not in g:
             if action != 'get' and action != 'search':
                 abort(403)
-            elif model.status == ContentStatus.Active:
+            elif action == 'search' or model.status == ContentStatus.Active:
                 return True
             else:
                 abort(404)

@@ -3,3 +3,5 @@ __pycache__/
 *.sublime*
 .cache/
 .DS_Store
+.coverage
+htmlcov/

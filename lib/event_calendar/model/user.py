@@ -5,7 +5,7 @@ import base64
 import cryptography.exceptions
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from cryptography.hazmat.backends import default_backend
-from sqlalchemy import Column, String, Binary, Enum, or_
+from sqlalchemy import Column, String, LargeBinary, Enum, or_
 import event_calendar.model.org
 from sqlalchemy.orm import relationship
 from event_calendar.model import Model
@@ -22,8 +22,8 @@ class User(Model,Base):
     email    = Column( String, unique=True )
     language = Column( Enum(LanguageCode), default='en' )
     name     = Column( String )
-    salt     = Column( Binary )
-    password = Column( Binary )
+    salt     = Column( LargeBinary )
+    password = Column( LargeBinary )
     orgs     = relationship('Org', secondary='user_roles')
     roles    = relationship('UserRole', back_populates="user", lazy="dynamic")
 
