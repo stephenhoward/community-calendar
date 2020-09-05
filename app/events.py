@@ -11,9 +11,9 @@ delete  = guard_content( Event, method = handlers.delete )
 _search = guard_content( Event, method = handlers.search )
 
 search_parameters = {
-    'from':       ( lambda value: ( 'start[ge]', datetime.strptime(value, "%Y-%m-%d") ) ),
-    'to':         ( lambda value: ( 'start[le]', datetime.strptime(value, "%Y-%m-%d") + timedelta( hours=23, minutes=59, seconds=59 ) ) ),
-    'categories': ( lambda value: ( ) )
+    'from':       ( lambda value: ( 'instances.start_time[ge]', datetime.strptime(value, "%Y-%m-%d") ) ),
+    'to':         ( lambda value: ( 'instances.start_time[le]', datetime.strptime(value, "%Y-%m-%d") + timedelta( hours=23, minutes=59, seconds=59 ) ) ),
+    'categories': ( lambda value: ( 'categories.name[in]', value.split(",") ) )
 }
 
 def search():

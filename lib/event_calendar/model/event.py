@@ -38,6 +38,7 @@ class Event(PrimaryContentModel,Base):
     location   = relationship( "Location" )
     series     = relationship( "Series", backref="events" )
     dates      = relationship( "EventDate", back_populates="event" )
+    instances  = relationship( "EventDateInstance", back_populates="event" )
 
     @classmethod
     def _search(cls,query,**kwargs):
