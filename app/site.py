@@ -1,5 +1,6 @@
 from flask import jsonify, request
 from event_calendar.model.user import User
+from event_calendar.model.org import Org
 from event_calendar.site_settings import site_settings, languages
 from event_calendar.model.image import SiteImage
 from app.guards import guard_passthrough

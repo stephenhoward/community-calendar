@@ -42,7 +42,7 @@ def guard_system_content(cls, **kwargs):
 
     def _guard(action,model):
 
-        if not g.user:
+        if not 'user' not in g:
             if action != 'get' and action != 'search':
                 abort(403)
             else:
@@ -58,7 +58,7 @@ def guard_system_content(cls, **kwargs):
 def guard_system_model(cls, **kwargs):
 
     def _guard(action,model):
-        if not g.user:
+        if 'user' not in g:
             abort(403)
 
         if g.user.has_role('Administrator', for_org = None ):

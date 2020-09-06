@@ -91,9 +91,9 @@ class User(Model,Base):
             roles = self.roles.filter( UserRole.role == role, UserRole.org_id == None )
         else:
             org_id = kwargs['for_org'].id if isinstance(kwargs['for_org'],Org) else kwargs['for_org']
-            roles  = self.roles.filter( UserRole.role == role, or_( UserRole.org_id == org_id,  UserRole.org_id == None ) ).all()
+            roles  = self.roles.filter( UserRole.role == role, or_( UserRole.org_id == org_id,  UserRole.org_id == None ) )
 
-        return True if len(roles) > 0 else False
+        return True if roles.count() > 0 else False
 
     def grant_role(self,role,**kwargs):
 
