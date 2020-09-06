@@ -42,13 +42,13 @@ def guard_system_content(cls, **kwargs):
 
     def _guard(action,model):
 
-        if not 'user' not in g:
+        if 'user' not in g:
             if action != 'get' and action != 'search':
                 abort(403)
             else:
                 return True
 
-        if g.user.has_system_role('Editor', for_org = None ):
+        if g.user.has_role('Editor', for_org = None ):
             return True
         else:
             abort(403)

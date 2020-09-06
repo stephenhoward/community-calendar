@@ -108,11 +108,11 @@ class User(Model,Base):
         if org is None:
             raise Exception('Org "' + kwargs['for_org'] + '" not found')
 
-        self.roles.append(UserRole(
-            user_id = self.id,
-            org_id = org.id,
-            role = UserRoleEnum[role]
-        ))
+        self.roles.append(UserRole.create({
+            'user_id': self.id,
+            'org_id':  org.id,
+            'role':    UserRoleEnum[role]
+        }))
         self.save()
 
         return True
